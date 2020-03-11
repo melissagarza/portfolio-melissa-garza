@@ -1,0 +1,28 @@
+{
+  "name": "melissagarza",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/melissagarza/portfolio-melissa-garza.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/melissagarza/portfolio-melissa-garza/issues"
+  },
+  "homepage": "https://github.com/melissagarza/portfolio-melissa-garza#readme",
+  "engines": {
+    "node": "13.10.x"
+  },
+  "dependencies": {
+    "express": "4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.2"
+  }
+}

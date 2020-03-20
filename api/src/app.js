@@ -1,25 +1,45 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const routerApi = require('./routes');
-require('dotenv/config');
+const path = require('path');
+
+require('dotenv').config();
 
 const app = express();
 
-app.use(express.urlencoded({ extended: true }));
+const {
+  NODE_ENV: nodeEnv,
+  PROD_DATABASE_URL: prodDatabaseUrl,
+  DEV_DATABASE_URL: devDatabaseUrl
+} = process.env;
+
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
 app.use(express.json());
 
 app.use('/api', routerApi);
 
-mongoose.connect(
-  process.env.DATABASE_URL,
-  {
-    dbName: 'portfolio',
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    useUnifiedTopology: true
-  }
-);
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('../../client/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, '../../client', 'build', 'index.html')
+    );
+  });
+}
+
+const databaseUrl = nodeEnv === 'production' ? prodDatabaseUrl : devDatabaseUrl;
+
+mongoose.connect(databaseUrl, {
+  dbName: 'portfolio',
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+  useUnifiedTopology: true
+});
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {

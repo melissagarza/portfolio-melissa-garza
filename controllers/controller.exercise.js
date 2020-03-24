@@ -29,7 +29,7 @@ const upload = async (req, res) => {
     
     if (file.mimetype !== 'text/csv') return res.status(415).json({ msg: 'File must be of type text/csv' });
 
-    console.log(file);
+    await serviceExercise.upload(file);
 
     res.json({
       success: true,

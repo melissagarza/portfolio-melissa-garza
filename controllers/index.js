@@ -1,5 +1,9 @@
+const controllerAuth = require('./controller.auth');
 const controllerUser = require('./controller.user');
+const controllerExercise = require('./controller.exercise');
 
 module.exports = {
-  controllerUser
+  controllerAuth,
+  controllerUser,
+  controllerExercise
 };

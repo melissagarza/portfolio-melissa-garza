@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const { serviceUser } = require('../services');
 
 const getUsers = async (req, res) => {
@@ -5,7 +6,8 @@ const getUsers = async (req, res) => {
     const users = await serviceUser.getUsers();
     res.send(users);
   } catch (err) {
-    res.send(`Error: ${err.message}`);
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 }
 
@@ -15,21 +17,26 @@ const getUser = async (req, res) => {
     const user = await serviceUser.getUser(userId);
     res.send(user);
   } catch (err) {
-    res.send(`Error: ${err.message}`);
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 }
 
-const createUser = async (req, res) => {
+const registerUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   try {
-    const user = await serviceUser.createUser(req.body);
-    res.send(user);
+    const token = await serviceUser.registerUser(req.body);
+    res.send(token);
   } catch (err) {
-    res.send(`Error: ${err.message}`);
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 }
 
 module.exports = {
   getUsers,
   getUser,
-  createUser
+  registerUser
 };

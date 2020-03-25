@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const routerApi = require('./routes');
+const routerApi = require('./routers');
 const path = require('path');
 
 require('dotenv').config();
@@ -18,11 +18,11 @@ app.use(
     extended: true
   })
 );
-app.use(express.json());
+app.use(express.json({ extended: true }));
 
 app.use('/api', routerApi);
 
-if (process.env.NODE_ENV === 'production') {
+if (nodeEnv === 'production') {
   app.use(express.static('client/build'));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
@@ -44,5 +44,5 @@ db.once('open', () => {
   console.log('Successfully connected to database.');
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

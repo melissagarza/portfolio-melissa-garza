@@ -13,8 +13,21 @@ const upload = async (file, userId) => {
   const exercisesToSave = [];
 
   const csvStream = csvParse({
-    columns: ['date', 'name', 'sets', 'reps', 'weight', 'warmup', 'note'],
-    from_line: 2
+    columns: [
+      'date',
+      'name',
+      'reps',
+      'weight',
+      'duration',
+      'distance',
+      'incline',
+      'resistance',
+      'warmup',
+      'note',
+      'multiplier'
+    ],
+    from_line: 2,
+    skip_lines_with_error: true
   });
 
   csvStream.on('readable', () => {
@@ -24,10 +37,7 @@ const upload = async (file, userId) => {
       const recordUpdates = {
         user: userId,
         date: new Date(record.date),
-        sets: parseInt(record.sets, 10),
-        reps: parseInt(record.reps, 10),
-        weight: parseInt(record.weight, 10),
-        warmup: !!(record.warmup)
+        reps: parseInt(record.reps, 10)
       };
       const updatedRecord = {...record, ...recordUpdates};
       exercisesToSave.push(updatedRecord);

@@ -25,7 +25,7 @@ const upload = async (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).json({ msg: 'No files were uploaded' });
     }
-    const file = req.files.fitbodWorkout;
+    const file = req.files.workoutExport;
     
     if (file.mimetype !== 'text/csv') return res.status(415).json({ msg: 'File must be of type text/csv' });
 

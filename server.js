@@ -18,7 +18,7 @@ app.use(
     extended: true
   })
 );
-app.use(express.json());
+app.use(express.json({ extended: true }));
 
 app.use('/api', routerApi);
 

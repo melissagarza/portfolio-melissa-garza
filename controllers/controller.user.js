@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const { serviceUser } = require('../services');
 
 const getUsers = async (req, res) => {
@@ -19,10 +20,13 @@ const getUser = async (req, res) => {
   }
 }
 
-const createUser = async (req, res) => {
+const registerUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   try {
-    const user = await serviceUser.createUser(req.body);
-    res.send(user);
+    const token = await serviceUser.registerUser(req.body);
+    res.send(token);
   } catch (err) {
     res.send(`Error: ${err.message}`);
   }
@@ -31,5 +35,5 @@ const createUser = async (req, res) => {
 module.exports = {
   getUsers,
   getUser,
-  createUser
+  registerUser
 };

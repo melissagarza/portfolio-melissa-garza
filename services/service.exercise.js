@@ -9,7 +9,7 @@ const getExercise = async idExercise => {
   return await Exercise.findById(idExercise);
 };
 
-const upload = async file => {
+const upload = async (file, userId) => {
   const exercisesToSave = [];
 
   const csvStream = csvParse({
@@ -21,9 +21,8 @@ const upload = async file => {
     let record;
 
     while (record = csvStream.read()) {
-      // TODO: Replace this hardcoded user ID with the logged in user's ID
       const recordUpdates = {
-        user: '5e786b007726d575fb827760',
+        user: userId,
         date: new Date(record.date),
         sets: parseInt(record.sets, 10),
         reps: parseInt(record.reps, 10),
@@ -40,7 +39,6 @@ const upload = async file => {
   });
 
   csvStream.on('end', async () => {
-    console.log('Finished parsing CSV file');
     return await Exercise.insertMany(exercisesToSave);
   });
 

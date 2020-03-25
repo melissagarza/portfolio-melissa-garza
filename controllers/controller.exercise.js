@@ -6,7 +6,7 @@ const getExercises = async (req, res) => {
     res.send(exercises);
   } catch (err) {
     console.error(err.message);
-    res.send(`Error: ${err.message}`);
+    res.status(500).json({ msg: err.message });
   }
 };
 
@@ -16,7 +16,7 @@ const getExercise = async (req, res) => {
     res.json(exercise);
   } catch (err) {
     console.error(err.message);
-    res.send(`Error: ${err.message}`);
+    res.status(500).json({ msg: err.message });
   }
 };
 
@@ -33,11 +33,11 @@ const upload = async (req, res) => {
 
     res.json({
       success: true,
-      msg: 'File successfully upload'
+      msg: 'File successfully uploaded'
     });
   } catch (err) {
     console.error(err.message);
-    res.send(`Error: ${err.message}`);
+    res.status(500).json({ msg: err.message });
   }
 };
 

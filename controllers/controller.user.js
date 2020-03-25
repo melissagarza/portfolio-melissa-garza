@@ -6,7 +6,8 @@ const getUsers = async (req, res) => {
     const users = await serviceUser.getUsers();
     res.send(users);
   } catch (err) {
-    res.send(`Error: ${err.message}`);
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 }
 
@@ -16,7 +17,8 @@ const getUser = async (req, res) => {
     const user = await serviceUser.getUser(userId);
     res.send(user);
   } catch (err) {
-    res.send(`Error: ${err.message}`);
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 }
 
@@ -28,7 +30,8 @@ const registerUser = async (req, res) => {
     const token = await serviceUser.registerUser(req.body);
     res.send(token);
   } catch (err) {
-    res.send(`Error: ${err.message}`);
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
   }
 }
 

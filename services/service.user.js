@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
 const getUsers = async () => {
-  return await User.find();
+  return await User.find().select('-password');
 }
 
 const getUser = async (userId) => {

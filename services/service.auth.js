@@ -2,6 +2,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
+const getAuthenticatedUser = async (userId) => {
+  const user = await User.findById(userId).select('-password');
+  if (!user) throw new Error('User does not exist');
+
+  return user;
+};
+
 const authenticate = async (body) => {
   const { email, password } = body;
 
@@ -27,5 +34,6 @@ const authenticate = async (body) => {
 };
 
 module.exports = {
-  authenticate
+  authenticate,
+  getAuthenticatedUser
 };

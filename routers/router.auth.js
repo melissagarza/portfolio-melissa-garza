@@ -7,7 +7,7 @@ const routerAuth = express.Router();
 
 routerAuth.get('/', auth, controllerAuth.getAuthenticatedUser);
 routerAuth.post('/', [
-  check('email', 'A valid email is required').isEmail(),
+  check('username', 'Username is required').exists(),
   check('password', 'Password is required').exists()
 ], controllerAuth.authenticate);
 

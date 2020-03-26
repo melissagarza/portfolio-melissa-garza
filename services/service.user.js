@@ -4,10 +4,10 @@ const chance = require('chance').Chance();
 const { User } = require('../models');
 
 const registerUser = async (userInfo) => {
-  const { name, email, password } = userInfo;
+  const { username, password } = userInfo;
   try {
-    let user = await User.findOne({ email });
-    if (user) throw new Error('User already exists');
+    let user = await User.findOne({ username });
+    if (user) throw new Error('Username already exists');
 
     let alias = chance.animal();
     let userWithSameAlias = await User.find({ alias });
@@ -16,7 +16,7 @@ const registerUser = async (userInfo) => {
       userWithSameAlias = await User.find({ alias });
     }
 
-    user = new User({ name, email, password, alias });
+    user = new User({ username, password, alias });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);

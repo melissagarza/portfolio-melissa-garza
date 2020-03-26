@@ -2,11 +2,11 @@ const csvParse = require('csv-parse');
 const { Exercise } = require('../models');
 
 const getExercises = async (filters) => {
-  return await Exercise.find(filters);
+  return await Exercise.find(filters).populate('user', 'alias -_id').select('-__v');
 };
 
 const getExercisesByUser = async (userId, filters) => {
-  return await Exercise.find({ user: userId, ...filters });
+  return await Exercise.find({ user: userId, ...filters }).populate('user', 'alias').select('-__v');
 };
 
 const upload = async (file, userId) => {

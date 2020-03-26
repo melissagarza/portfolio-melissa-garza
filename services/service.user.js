@@ -1,14 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const chance = require('chance').Chance();
 const { User } = require('../models');
-
-const getUsers = async () => {
-  return await User.find().select('-password');
-}
-
-const getUser = async (userId) => {
-  return await User.findById(userId);
-}
 
 const registerUser = async (userInfo) => {
   const { name, email, password } = userInfo;
@@ -16,7 +9,14 @@ const registerUser = async (userInfo) => {
     let user = await User.findOne({ email });
     if (user) throw new Error('User already exists');
 
-    user = new User({ name, email, password });
+    let alias = chance.animal();
+    let userWithSameAlias = await User.find({ alias });
+    while (userWithSameAlias.length > 0) {
+      alias += ` ${chance.animal()}`;
+      userWithSameAlias = await User.find({ alias });
+    }
+
+    user = new User({ name, email, password, alias });
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
@@ -42,7 +42,5 @@ const registerUser = async (userInfo) => {
 }
 
 module.exports = {
-  getUsers,
-  getUser,
   registerUser
 }

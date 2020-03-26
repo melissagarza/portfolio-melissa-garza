@@ -1,27 +1,6 @@
 const { validationResult } = require('express-validator');
 const { serviceUser } = require('../services');
 
-const getUsers = async (req, res) => {
-  try {
-    const users = await serviceUser.getUsers();
-    res.send(users);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: err.message });
-  }
-}
-
-const getUser = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const user = await serviceUser.getUser(userId);
-    res.send(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ msg: err.message });
-  }
-}
-
 const registerUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -36,7 +15,5 @@ const registerUser = async (req, res) => {
 }
 
 module.exports = {
-  getUsers,
-  getUser,
   registerUser
 };

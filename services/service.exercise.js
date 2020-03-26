@@ -1,34 +1,43 @@
 const csvParse = require('csv-parse');
 const { Exercise } = require('../models');
 
-const getExercises = async () => {
-  return await Exercise.find();
+const getExercises = async (filters) => {
+  return await Exercise.find(filters).populate('user', 'alias -_id').select('-__v');
 };
 
-const getExercise = async idExercise => {
-  return await Exercise.findById(idExercise);
+const getExercisesByUser = async (userId, filters) => {
+  return await Exercise.find({ user: userId, ...filters }).populate('user', 'alias').select('-__v');
 };
 
-const upload = async file => {
+const upload = async (file, userId) => {
   const exercisesToSave = [];
 
   const csvStream = csvParse({
-    columns: ['date', 'name', 'sets', 'reps', 'weight', 'warmup', 'note'],
-    from_line: 2
+    columns: [
+      'date',
+      'name',
+      'reps',
+      'weight',
+      'duration',
+      'distance',
+      'incline',
+      'resistance',
+      'warmup',
+      'note',
+      'multiplier'
+    ],
+    from_line: 2,
+    skip_lines_with_error: true
   });
 
   csvStream.on('readable', () => {
     let record;
 
     while (record = csvStream.read()) {
-      // TODO: Replace this hardcoded user ID with the logged in user's ID
       const recordUpdates = {
-        user: '5e786b007726d575fb827760',
+        user: userId,
         date: new Date(record.date),
-        sets: parseInt(record.sets, 10),
-        reps: parseInt(record.reps, 10),
-        weight: parseInt(record.weight, 10),
-        warmup: !!(record.warmup)
+        reps: parseInt(record.reps, 10)
       };
       const updatedRecord = {...record, ...recordUpdates};
       exercisesToSave.push(updatedRecord);
@@ -40,7 +49,6 @@ const upload = async file => {
   });
 
   csvStream.on('end', async () => {
-    console.log('Finished parsing CSV file');
     return await Exercise.insertMany(exercisesToSave);
   });
 
@@ -50,6 +58,6 @@ const upload = async file => {
 
 module.exports = {
   getExercises,
-  getExercise,
+  getExercisesByUser,
   upload
 };

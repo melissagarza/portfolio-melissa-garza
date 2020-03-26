@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 
 const getAuthenticatedUser = async (userId) => {
-  const user = await User.findById(userId).select('-password');
+  const user = await User.findById(userId).select('-password -_id -__v');
   if (!user) throw new Error('User does not exist');
 
   return user;

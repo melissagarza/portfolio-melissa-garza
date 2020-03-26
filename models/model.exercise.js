@@ -7,23 +7,28 @@ const ExerciseSchema = new mongoose.Schema({
     required: true
   },
   date: {
-    type: Date,
-    required: true
+    type: Date
   },
   name: {
-    type: String,
-    required: true
-  },
-  sets: {
-    type: Number
+    type: String
   },
   reps: {
-    type: Number,
-    required: true
+    type: Number
   },
   weight: {
-    type: Number,
-    default: 0
+    type: mongoose.Schema.Types.Decimal128
+  },
+  duration: {
+    type: mongoose.Schema.Types.Decimal128
+  },
+  distance: {
+    type: mongoose.Schema.Types.Decimal128
+  },
+  incline: {
+    type: mongoose.Schema.Types.Decimal128
+  },
+  resistance: {
+    type: mongoose.Schema.Types.Decimal128
   },
   warmup: {
     type: Boolean,
@@ -31,6 +36,9 @@ const ExerciseSchema = new mongoose.Schema({
   },
   note: {
     type: String
+  },
+  multiplier: {
+    type: mongoose.Schema.Types.Decimal128
   }
 });
 

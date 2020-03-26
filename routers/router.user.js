@@ -4,8 +4,6 @@ const { controllerUser } = require('../controllers');
 
 const routerUser = express.Router();
 
-routerUser.get('/', controllerUser.getUsers);
-routerUser.get('/:id', controllerUser.getUser);
 routerUser.post('/', [
   check('name', 'Name is required').not().isEmpty(),
   check('email', 'Please include a valid email').isEmail(),

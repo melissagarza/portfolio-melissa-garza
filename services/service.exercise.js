@@ -1,12 +1,12 @@
 const csvParse = require('csv-parse');
 const { Exercise } = require('../models');
 
-const getExercises = async () => {
-  return await Exercise.find();
+const getExercises = async (filters) => {
+  return await Exercise.find(filters);
 };
 
-const getExercise = async idExercise => {
-  return await Exercise.findById(idExercise);
+const getExercisesByUser = async (userId, filters) => {
+  return await Exercise.find({ user: userId, ...filters });
 };
 
 const upload = async (file, userId) => {
@@ -58,6 +58,6 @@ const upload = async (file, userId) => {
 
 module.exports = {
   getExercises,
-  getExercise,
+  getExercisesByUser,
   upload
 };

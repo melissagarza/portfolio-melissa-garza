@@ -2,7 +2,7 @@ const { serviceExercise } = require('../services');
 
 const getExercises = async (req, res) => {
   try {
-    const exercises = await serviceExercise.getExercises();
+    const exercises = await serviceExercise.getExercises(req.query);
     res.send(exercises);
   } catch (err) {
     console.error(err.message);
@@ -10,10 +10,10 @@ const getExercises = async (req, res) => {
   }
 };
 
-const getExercise = async (req, res) => {
+const getExercisesByUser = async (req, res) => {
   try {
-    const exercise = serviceExercise.getExercise(req.params.exercise_id);
-    res.json(exercise);
+    const exercises = await serviceExercise.getExercisesByUser(req.user.id, req.query);
+    res.json(exercises);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: err.message });
@@ -43,6 +43,6 @@ const upload = async (req, res) => {
 
 module.exports = {
   getExercises,
-  getExercise,
+  getExercisesByUser,
   upload
 };

@@ -1,5 +1,5 @@
 const csvParse = require('csv-parse');
-const { Exercise } = require('../models');
+const { Exercise, User } = require('../models');
 
 const getExercises = async (filters) => {
   return await Exercise.find(filters).populate('user', 'alias -_id').select('-__v');
@@ -10,7 +10,10 @@ const getExercisesByUser = async (userId, filters) => {
 };
 
 const upload = async (file, userId) => {
-  const exercisesToSave = [];
+  const newExercises = [];
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User does not exist');
+  const userDateOfLastExercise = new Date(user.dateOfLastExercise);
 
   const csvStream = csvParse({
     columns: [
@@ -30,7 +33,7 @@ const upload = async (file, userId) => {
     skip_lines_with_error: true
   });
 
-  csvStream.on('readable', () => {
+  csvStream.on('readable', async () => {
     let record;
 
     while (record = csvStream.read()) {
@@ -40,7 +43,10 @@ const upload = async (file, userId) => {
         reps: parseInt(record.reps, 10)
       };
       const updatedRecord = {...record, ...recordUpdates};
-      exercisesToSave.push(updatedRecord);
+
+      if (updatedRecord.date > userDateOfLastExercise) {
+        newExercises.push(updatedRecord);
+      }
     }
   });
 
@@ -49,7 +55,17 @@ const upload = async (file, userId) => {
   });
 
   csvStream.on('end', async () => {
-    return await Exercise.insertMany(exercisesToSave);
+    if (newExercises.length > 0) {
+      const lastExerciseDate = new Date(newExercises[0].date);
+  
+      if (userDateOfLastExercise < lastExerciseDate) {
+        user.dateOfLastExercise = lastExerciseDate;
+        await user.save();
+      }
+  
+      return await Exercise.insertMany(newExercises);
+    }
+    return;
   });
 
   csvStream.write(file.data);

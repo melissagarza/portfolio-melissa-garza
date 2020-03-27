@@ -10,9 +10,9 @@ const getAuthenticatedUser = async (userId) => {
 };
 
 const authenticate = async (body) => {
-  const { email, password } = body;
+  const { username, password } = body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ username });
   if (!user) throw new Error('Invalid credentials');
 
   const passwordsMatch = await bcrypt.compare(password, user.password);

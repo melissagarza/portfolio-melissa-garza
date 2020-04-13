@@ -1,13 +1,19 @@
 import React from 'react';
-import Navbar from './components/Navbar';
+import { Provider } from 'react-redux';
+import store from './store';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Navbar from './components/layout/Navbar';
+import Routes from './components/routes/Routes';
 
-function App() {
+const App = () => {
   return (
-    <React.Fragment>
-      <Navbar />
-      <div className="container">Hello, world!</div>
-    </React.Fragment>
+    <Provider store={store}>
+      <Router>
+        <Navbar />
+        <Routes />
+      </Router>
+    </Provider>
   );
-}
+};
 
 export default App;

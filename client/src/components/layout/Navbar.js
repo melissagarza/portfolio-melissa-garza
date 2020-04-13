@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Navbar() {
+const Navbar = () => {
   return (
     <nav className="navbar">
-      Here is some content...
+      Navbar
     </nav>
   );
 }

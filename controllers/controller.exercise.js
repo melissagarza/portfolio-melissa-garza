@@ -10,10 +10,30 @@ const getExercises = async (req, res) => {
   }
 };
 
+const getExerciseNames = async (req, res) => {
+  try {
+    const exerciseNames = await serviceExercise.getExerciseNames();
+    res.send(exerciseNames);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
+  }
+};
+
 const getExercisesByUser = async (req, res) => {
   try {
     const exercises = await serviceExercise.getExercisesByUser(req.user.id, req.query);
     res.json(exercises);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: err.message });
+  }
+};
+
+const getExerciseNamesByUser = async (req, res) => {
+  try {
+    const exerciseNames = await serviceExercise.getExerciseNamesByUser(req.user.id);
+    res.send(exerciseNames);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: err.message });
@@ -43,6 +63,8 @@ const upload = async (req, res) => {
 
 module.exports = {
   getExercises,
+  getExerciseNames,
   getExercisesByUser,
+  getExerciseNamesByUser,
   upload
 };

@@ -1,25 +1,25 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { loadExercises, loadExerciseNames } from '../../actions/exercise';
+import { loadExerciseNames, loadExercises } from '../../actions/exercise';
 import Loading from '../layout/Loading';
 import ExerciseChart from './ExerciseChart';
 import ExerciseForm from './ExerciseForm';
 
 const Exercises = ({
-  loadExercises,
   loadExerciseNames,
+  loadExercises,
   exercise: {
-    exercises,
+    exercise,
     exerciseNames,
+    exercises,
     loading
   }
 }) => {
 
   useEffect(() => {
-    loadExercises();
     loadExerciseNames();
-  }, [loadExercises, loadExerciseNames]);
+  }, [loadExerciseNames]);
 
   return loading || exercises === null || exerciseNames === null ? (
     <Loading />
@@ -43,6 +43,6 @@ Exercises.propTypes = {
 const mapStateToProps = ({ exercise }) => ({ exercise });
 
 export default connect(mapStateToProps, {
-  loadExercises,
-  loadExerciseNames
+  loadExerciseNames,
+  loadExercises
 })(Exercises);

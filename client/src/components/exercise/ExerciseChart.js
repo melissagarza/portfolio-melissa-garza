@@ -10,7 +10,7 @@ const ExerciseChart = props => {
 };
 
 ExerciseChart.propTypes = {
-
+  
 };
 
 export default ExerciseChart;

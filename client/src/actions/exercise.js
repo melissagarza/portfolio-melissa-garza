@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 import {
   EXERCISE_LOAD,
   EXERCISE_LIST_CLEAR,
@@ -14,9 +15,15 @@ export const loadExercise = exerciseName => dispatch => {
   });
 };
 
-export const loadExercises = () => async dispatch => {
+export const loadExercises = (query = null) => async dispatch => {
   try {
-    const res = await axios.get('/api/exercises');
+    let endpoint = '/api/exercises';
+
+    if (query !== null) {
+      endpoint = `${endpoint}?${qs.stringify(query)}`
+    }
+
+    const res = await axios.get(endpoint);
 
     dispatch({
       type: EXERCISE_LIST_LOAD,

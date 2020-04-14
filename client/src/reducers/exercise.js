@@ -8,8 +8,9 @@ import {
 
 const initialState = {
   exercise: '',
-  exercises: [],
   exerciseNames: [],
+  exercises: [],
+  exercisesByUser: [],
   loading: true,
   errors: {}
 };

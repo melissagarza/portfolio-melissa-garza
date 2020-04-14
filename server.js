@@ -8,9 +8,9 @@ require('dotenv').config();
 const app = express();
 
 const {
-  NODE_ENV: nodeEnv,
-  PROD_DATABASE_URL: prodDatabaseUrl,
-  DEV_DATABASE_URL: devDatabaseUrl
+  NODE_ENV,
+  PROD_DATABASE_URL,
+  DEV_DATABASE_URL
 } = process.env;
 
 app.use(
@@ -22,14 +22,14 @@ app.use(express.json({ extended: true }));
 
 app.use('/api', routerApi);
 
-if (nodeEnv === 'production') {
+if (NODE_ENV === 'production') {
   app.use(express.static('client/build'));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
 }
 
-const databaseUrl = nodeEnv === 'production' ? prodDatabaseUrl : devDatabaseUrl;
+const databaseUrl = NODE_ENV === 'production' ? PROD_DATABASE_URL : DEV_DATABASE_URL;
 
 mongoose.connect(databaseUrl, {
   dbName: 'portfolio',

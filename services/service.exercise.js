@@ -5,8 +5,22 @@ const getExercises = async (filters) => {
   return await Exercise.find(filters).populate('user', 'alias -_id').select('-__v');
 };
 
+const getExerciseNames = async () => {
+  return await Exercise.distinct('name', (err, res) => {
+    if (err) throw new Error(err.message);
+    return res;
+  });
+};
+
 const getExercisesByUser = async (userId, filters) => {
   return await Exercise.find({ user: userId, ...filters }).populate('user', 'alias').select('-__v');
+};
+
+const getExerciseNamesByUser = async (userId) => {
+  return await Exercise.distinct('name', { user: userId }, (err, res) => {
+    if (err) throw new Error(err.message);
+    return res;
+  });
 };
 
 const upload = async (file, userId) => {
@@ -74,6 +88,8 @@ const upload = async (file, userId) => {
 
 module.exports = {
   getExercises,
+  getExerciseNames,
   getExercisesByUser,
+  getExerciseNamesByUser,
   upload
 };

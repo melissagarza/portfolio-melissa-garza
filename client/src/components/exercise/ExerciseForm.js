@@ -10,8 +10,8 @@ const ExerciseForm = ({ exerciseNames }) => {
           <div className="control">
             <div className="select">
               <select>
-                {exerciseNames.map(name => (
-                  <option>{name}</option>
+                {exerciseNames.map((name, index) => (
+                  <option key={index}>{name}</option>
                 ))}
               </select>
             </div>

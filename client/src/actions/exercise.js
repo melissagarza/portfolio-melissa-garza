@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {
-  EXERCISES_FETCHED,
-  EXERCISES_CLEARED,
-  EXERCISES_ERROR
+  EXERCISE_LIST_CLEAR,
+  EXERCISE_LIST_ERROR,
+  EXERCISE_LIST_LOAD,
+  EXERCISE_LIST_NAMES
 } from './types';
 
 export const getExercises = () => async dispatch => {
@@ -10,22 +11,45 @@ export const getExercises = () => async dispatch => {
     const res = await axios.get('/api/exercises');
 
     dispatch({
-      type: EXERCISES_FETCHED,
+      type: EXERCISE_LIST_LOAD,
       payload: res.data
     });
   } catch (err) {
+    let payload = {
+      status: err.response ? err.response.status : '',
+      msg: err.response ? err.response.statusText : err.msg
+    };
+
     dispatch({
-      type: EXERCISES_ERROR,
-      payload: {
-        status: err.response.status,
-        msg: err.response.statusText
-      }
+      type: EXERCISE_LIST_ERROR,
+      payload
+    });
+  }
+};
+
+export const getExerciseNames = () => async dispatch => {
+  try {
+    const res = await axios.get('/api/exercises/names');
+
+    dispatch({
+      type: EXERCISE_LIST_NAMES,
+      payload: res.data
+    });
+  } catch (err) {
+    let payload = {
+      status: err.response ? err.response.status : '',
+      msg: err.response ? err.response.statusText : err.msg
+    };
+
+    dispatch({
+      type: EXERCISE_LIST_ERROR,
+      payload
     });
   }
 };
 
 export const clearExercises = () => async dispatch => {
   dispatch({
-    type: EXERCISES_CLEARED
+    type: EXERCISE_LIST_CLEAR
   });
 };

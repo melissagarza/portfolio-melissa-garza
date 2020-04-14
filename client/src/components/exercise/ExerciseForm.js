@@ -1,7 +1,10 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { loadExercise } from '../../actions/exercise';
+import { connect } from 'react-redux';
 
-const ExerciseForm = ({ exerciseNames }) => {
+const ExerciseForm = ({ exerciseNames, loadExercise }) => {
+
   return (
     <Fragment>
       <form>
@@ -9,9 +12,12 @@ const ExerciseForm = ({ exerciseNames }) => {
           <label className="label">Exercise</label>
           <div className="control">
             <div className="select">
-              <select>
+              <select onChange={e => loadExercise(e.target.value)}>
                 {exerciseNames.map((name, index) => (
-                  <option key={index}>{name}</option>
+                  <option
+                    key={index}
+                    value={name}
+                  >{name}</option>
                 ))}
               </select>
             </div>
@@ -23,7 +29,10 @@ const ExerciseForm = ({ exerciseNames }) => {
 };
 
 ExerciseForm.propTypes = {
-
+  exerciseNames: PropTypes.array.isRequired,
+  loadExercise: PropTypes.func.isRequired
 };
 
-export default ExerciseForm;
+const mapStateToProps = ({ exercise }) => ({ exercise });
+
+export default connect(mapStateToProps, { loadExercise })(ExerciseForm);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const ExerciseChart = props => {
   return (
-    <div className="fitbod-container">
+    <div className="exercise-container">
       CHART
     </div>
   );

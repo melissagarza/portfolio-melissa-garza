@@ -1,12 +1,20 @@
 import axios from 'axios';
 import {
+  EXERCISE_LOAD,
   EXERCISE_LIST_CLEAR,
   EXERCISE_LIST_ERROR,
   EXERCISE_LIST_LOAD,
   EXERCISE_LIST_NAMES
 } from './types';
 
-export const getExercises = () => async dispatch => {
+export const loadExercise = exerciseName => dispatch => {
+  dispatch({
+    type: EXERCISE_LOAD,
+    payload: exerciseName
+  });
+};
+
+export const loadExercises = () => async dispatch => {
   try {
     const res = await axios.get('/api/exercises');
 
@@ -27,7 +35,7 @@ export const getExercises = () => async dispatch => {
   }
 };
 
-export const getExerciseNames = () => async dispatch => {
+export const loadExerciseNames = () => async dispatch => {
   try {
     const res = await axios.get('/api/exercises/names');
 

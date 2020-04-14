@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getExercises, getExerciseNames } from '../../actions/exercise';
 import Loading from '../layout/Loading';
+import ExerciseChart from './ExerciseChart';
+import ExerciseForm from './ExerciseForm';
 
 const Exercises = ({
   getExercises,
@@ -24,12 +26,10 @@ const Exercises = ({
   ) : (
     <Fragment>
       <h1>Exercises</h1>
-      <div>{exerciseNames.length}</div>
-      {exerciseNames.map((exerciseName, index) => {
-        return (
-          <div key={index}>{exerciseName}</div>
-        );
-      })}
+      <ExerciseChart />
+      <ExerciseForm
+        exerciseNames={exerciseNames}
+      />
     </Fragment>
   )
 };

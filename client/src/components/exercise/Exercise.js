@@ -1,48 +1,33 @@
 import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { getExercises, getExerciseNames } from '../../actions/exercise';
+import { loadExerciseNames } from '../../actions/exercise';
 import Loading from '../layout/Loading';
 import ExerciseChart from './ExerciseChart';
 import ExerciseForm from './ExerciseForm';
 
-const Exercises = ({
-  getExercises,
-  getExerciseNames,
-  exercise: {
-    exercises,
-    exerciseNames,
-    loading
-  }
-}) => {
+const Exercise = ({ exercise: { loading }, loadExerciseNames }) => {
 
   useEffect(() => {
-    getExercises();
-    getExerciseNames();
-  }, [getExercises, getExerciseNames]);
+    loadExerciseNames();
+  }, [loadExerciseNames]);
 
-  return loading || exercises === null || exerciseNames === null ? (
+  return loading ? (
     <Loading />
   ) : (
     <Fragment>
-      <h1>Exercises</h1>
+      <h1 className="title">Exercise Charts</h1>
+      <ExerciseForm />
       <ExerciseChart />
-      <ExerciseForm
-        exerciseNames={exerciseNames}
-      />
     </Fragment>
   )
 };
 
-Exercises.propTypes = {
+Exercise.propTypes = {
   exercise: PropTypes.object.isRequired,
-  getExercises: PropTypes.func.isRequired,
-  getExerciseNames: PropTypes.func.isRequired
+  loadExerciseNames: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ exercise }) => ({ exercise });
 
-export default connect(mapStateToProps, {
-  getExercises,
-  getExerciseNames
-})(Exercises);
+export default connect(mapStateToProps, { loadExerciseNames })(Exercise);

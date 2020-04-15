@@ -39,6 +39,9 @@ const ExerciseSchema = new mongoose.Schema({
   },
   multiplier: {
     type: mongoose.Schema.Types.Decimal128
+  },
+  volume: {
+    type: mongoose.Schema.Types.Decimal128
   }
 });
 

@@ -1,4 +1,5 @@
 import {
+  EXERCISE_LOAD,
   EXERCISE_LIST_CLEAR,
   EXERCISE_LIST_ERROR,
   EXERCISE_LIST_LOAD,
@@ -6,8 +7,10 @@ import {
 } from '../actions/types';
 
 const initialState = {
-  exercises: [],
+  exercise: '',
   exerciseNames: [],
+  exercises: [],
+  exercisesByUser: [],
   loading: true,
   errors: {}
 };
@@ -16,6 +19,12 @@ export default (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case EXERCISE_LOAD:
+      return {
+        ...state,
+        exercise: payload,
+        loading: true
+      };
     case EXERCISE_LIST_LOAD:
       return {
         ...state,

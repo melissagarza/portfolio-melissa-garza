@@ -1,14 +1,42 @@
 import axios from 'axios';
+import qs from 'qs';
 import {
+  EXERCISE_LOAD,
   EXERCISE_LIST_CLEAR,
   EXERCISE_LIST_ERROR,
   EXERCISE_LIST_LOAD,
   EXERCISE_LIST_NAMES
 } from './types';
 
-export const getExercises = () => async dispatch => {
+export const loadExercise = exerciseName => dispatch => {
+  dispatch({
+    type: EXERCISE_LOAD,
+    payload: exerciseName
+  });
+};
+
+export const loadExercises = (query = null) => async dispatch => {
   try {
-    const res = await axios.get('/api/exercises');
+    let endpoint = '/api/exercises';
+
+    if (query !== null) {
+      endpoint += `?${qs.stringify(query)}`
+    }
+
+    const res = await axios.get(endpoint);
+
+    res.data.forEach((exercise, index, exercises) => {
+      const exerciseUpdates = {
+        weight: parseFloat(exercise.weight.$numberDecimal),
+        duration: parseFloat(exercise.duration.$numberDecimal),
+        distance: parseFloat(exercise.distance.$numberDecimal),
+        incline: parseFloat(exercise.incline.$numberDecimal),
+        resistance: parseFloat(exercise.resistance.$numberDecimal),
+        multiplier: parseFloat(exercise.multiplier.$numberDecimal),
+        volume: parseFloat(exercise.volume.$numberDecimal)
+      };
+      exercises[index] = { ...exercise, ...exerciseUpdates };
+    });
 
     dispatch({
       type: EXERCISE_LIST_LOAD,
@@ -27,7 +55,7 @@ export const getExercises = () => async dispatch => {
   }
 };
 
-export const getExerciseNames = () => async dispatch => {
+export const loadExerciseNames = () => async dispatch => {
   try {
     const res = await axios.get('/api/exercises/names');
 

@@ -25,6 +25,19 @@ export const loadExercises = (query = null) => async dispatch => {
 
     const res = await axios.get(endpoint);
 
+    res.data.forEach((exercise, index, exercises) => {
+      const exerciseUpdates = {
+        weight: parseFloat(exercise.weight.$numberDecimal),
+        duration: parseFloat(exercise.duration.$numberDecimal),
+        distance: parseFloat(exercise.distance.$numberDecimal),
+        incline: parseFloat(exercise.incline.$numberDecimal),
+        resistance: parseFloat(exercise.resistance.$numberDecimal),
+        multiplier: parseFloat(exercise.multiplier.$numberDecimal),
+        volume: parseFloat(exercise.volume.$numberDecimal)
+      };
+      exercises[index] = { ...exercise, ...exerciseUpdates };
+    });
+
     dispatch({
       type: EXERCISE_LIST_LOAD,
       payload: res.data

@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 
 const ExerciseForm = ({
   exercise: {
-    exerciseNames
+    exercise,
+    exerciseNames,
+    loading
   },
   loadExercise,
   loadExercises
@@ -19,21 +21,23 @@ const ExerciseForm = ({
   return (
     <Fragment>
       <form>
-        <div className="field">
-          <label className="label">Exercise</label>
-          <div className="control">
-            <div className="select">
-              <select onChange={e => onChangeSelectExercise(e)}>
-                {exerciseNames.map((name, index) => (
-                  <option
-                    key={index}
-                    value={name}
-                  >{name}</option>
-                ))}
-              </select>
+        <fieldset disabled={loading ? 'disabled': ''}>
+          <div className="field">
+            <label className="label">Exercise</label>
+            <div className="control">
+              <div className="select">
+                <select
+                  onChange={e => onChangeSelectExercise(e)}
+                  value={exercise}
+                >
+                  {exerciseNames.map((name, index) => (
+                    <option key={index} value={name}>{name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
+        </fieldset>
       </form>
     </Fragment>
   );

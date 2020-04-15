@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         exercise: payload,
-        loading: false
+        loading: true
       };
     case EXERCISE_LIST_LOAD:
       return {

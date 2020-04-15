@@ -16,7 +16,7 @@ const Exercise = ({ exercise: { loading }, loadExerciseNames }) => {
     <Loading />
   ) : (
     <Fragment>
-      <h1>Exercises</h1>
+      <h1 className="title">Exercise Charts</h1>
       <ExerciseForm />
       <ExerciseChart />
     </Fragment>

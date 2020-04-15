@@ -20,7 +20,7 @@ export const loadExercises = (query = null) => async dispatch => {
     let endpoint = '/api/exercises';
 
     if (query !== null) {
-      endpoint = `${endpoint}?${qs.stringify(query)}`
+      endpoint += `?${qs.stringify(query)}`
     }
 
     const res = await axios.get(endpoint);

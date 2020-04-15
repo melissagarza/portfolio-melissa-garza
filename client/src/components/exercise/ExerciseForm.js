@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import { loadExercise, loadExercises } from '../../actions/exercise';
 import { connect } from 'react-redux';
 
-const ExerciseForm = ({ exerciseNames, loadExercise, loadExercises }) => {
+const ExerciseForm = ({
+  exercise: {
+    exerciseNames
+  },
+  loadExercise,
+  loadExercises
+}) => {
 
   const onChangeSelectExercise = e => {
     loadExercise(e.target.value);
@@ -34,7 +40,7 @@ const ExerciseForm = ({ exerciseNames, loadExercise, loadExercises }) => {
 };
 
 ExerciseForm.propTypes = {
-  exerciseNames: PropTypes.array.isRequired,
+  exerciseNames: PropTypes.array,
   loadExercise: PropTypes.func.isRequired,
   loadExercises: PropTypes.func.isRequired
 };

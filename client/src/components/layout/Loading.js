@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import loading from './loading.gif';
 
 const Loading = () => (
-  <img src="https://placeimg.com/640/480/animals" alt="Loading..."/>
+  <Fragment>
+    <img src={loading} alt="Loading..."/>
+  </Fragment>
 );
 
 export default Loading;

@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import _ from 'underscore';
-import moment from 'moment';
 
 export const createChart = (name, exercises) => ({
 
@@ -24,7 +23,7 @@ export const createChart = (name, exercises) => ({
     }
 
     const dataExercises = _.groupBy(exercises, exercise => exercise.date);
-    const dates = _.keys(dataExercises);
+    const dates = _.keys(dataExercises).sort();
 
     const scaleX = d3.scaleTime()
       .domain(d3.extent(dates, date => this.parseDate(date)))
@@ -68,7 +67,7 @@ export const createChart = (name, exercises) => ({
 
     chartSvgWrapper.append('h3')
       .attr('class', `title-${name}`)
-      .text(exercises[0].name);
+      .text(`${exercises[0].name} by ${exercises[0].user.alias}`);
 
     const chartSvg = chartSvgWrapper.append('svg')
       .attr('class', `svg-${name}`)

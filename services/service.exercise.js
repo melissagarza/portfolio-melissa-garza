@@ -54,8 +54,17 @@ const upload = async (file, userId) => {
       const recordUpdates = {
         user: userId,
         date: new Date(record.date),
-        reps: parseInt(record.reps, 10)
+        reps: parseInt(record.reps, 10),
+        weight: parseFloat(record.weight, 10),
+        duration: parseFloat(record.duration, 10),
+        distance: parseFloat(record.distance, 10),
+        incline: parseFloat(record.incline, 10),
+        resistance: parseFloat(record.resistance, 10),
+        multiplier: parseFloat(record.multiplier, 10)
       };
+
+      recordUpdates.volume = recordUpdates.reps * recordUpdates.weight;
+
       const updatedRecord = {...record, ...recordUpdates};
 
       if (updatedRecord.date > userDateOfLastExercise) {

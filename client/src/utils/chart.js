@@ -67,7 +67,7 @@ export const createChart = (name, exercises) => ({
 
     chartSvgWrapper.append('h3')
       .attr('class', `title-${name}`)
-      .text(exercises[0].name);
+      .text(`${exercises[0].name} by ${exercises[0].user.alias}`);
 
     const chartSvg = chartSvgWrapper.append('svg')
       .attr('class', `svg-${name}`)

@@ -1,0 +1,43 @@
+.container-public {
+
+  .svg-wrapper-public {
+    margin-bottom: 50px;
+    border: 1px solid $colorFitbodBlack;
+
+    .title-public {
+      font-size: 30px;
+      font-weight: 700;
+      margin-left: 60px;
+    }
+    
+    .svg-public {
+  
+      .group-main-public {
+  
+        .group-chart-public {
+  
+          .area-public {
+            fill: $colorFitbod;
+          }
+
+          .line-public {
+            stroke: $colorFitbodDarkened;
+            stroke-width: 2px;
+          }
+    
+          .point-public {
+            fill: $colorFitbodBlack;
+          }
+        }
+  
+        .group-axis-x-public {
+  
+        }
+  
+        .group-axis-y-public {
+  
+        }
+      }
+    }
+  }
+}

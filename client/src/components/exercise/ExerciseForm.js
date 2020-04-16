@@ -31,24 +31,22 @@ const ExerciseForm = ({
 
   return (
     <Fragment>
-      <form>
-        <fieldset disabled={loading ? 'disabled': ''}>
-          <div className="field">
-            <label className="label">Exercise</label>
-            <div className="control">
-              <div className="select">
-                <select
-                  onChange={e => onChangeSelectExercise(e)}
-                  value={exercise}
-                >
-                  {exerciseNames.map((name, index) => (
-                    <option key={index} value={name}>{name}</option>
-                  ))}
-                </select>
-              </div>
+      <form className="form-exercise">
+        <div className="field">
+          <label className="label">Exercise</label>
+          <div className="control">
+            <div className="select">
+              <select
+                onChange={e => onChangeSelectExercise(e)}
+                value={exercise}
+              >
+                {exerciseNames.map((name, index) => (
+                  <option key={index} value={name}>{name}</option>
+                ))}
+              </select>
             </div>
           </div>
-        </fieldset>
+        </div>
       </form>
     </Fragment>
   );

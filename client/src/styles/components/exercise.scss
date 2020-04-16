@@ -5,13 +5,15 @@
 .container-public {
 
   .svg-wrapper-public {
-    margin-bottom: 50px;
+    padding: 2rem 2rem 0 2rem;
+    margin-bottom: 3rem;
     border: 1px solid $colorFitbodBlack;
 
     .title-public {
-      font-size: 30px;
+      font-size: 1.875rem;
       font-weight: 700;
-      margin-left: 60px;
+      margin-left: 3.75em;
+      margin-bottom: 2rem;
     }
     
     .svg-public {
@@ -22,9 +24,6 @@
   
           .area-public {
             fill: $colorFitbod;
-          }
-
-          .line-public {
             stroke: $colorFitbodDarkened;
             stroke-width: 2px;
           }
@@ -32,14 +31,6 @@
           .point-public {
             fill: $colorFitbodBlack;
           }
-        }
-  
-        .group-axis-x-public {
-  
-        }
-  
-        .group-axis-y-public {
-  
         }
       }
     }

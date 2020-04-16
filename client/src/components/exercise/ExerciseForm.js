@@ -46,6 +46,7 @@ const ExerciseForm = ({
               </select>
             </div>
           </div>
+          <p className="help">Note: Calculating volume only works for certain exercises. Some exercises will show unwanted results.</p>
         </div>
       </form>
     </Fragment>

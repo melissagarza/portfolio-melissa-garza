@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { loadExercise, loadExercises } from '../../actions/exercise';
 import { connect } from 'react-redux';
@@ -13,6 +13,17 @@ const ExerciseForm = ({
   loadExercises
 }) => {
 
+  useEffect(() => {
+    if (!loading && exercise === '' && exerciseNames && exerciseNames.length > 0) {
+      loadExercises({ name: exerciseNames[0] });
+    }
+  }, [
+    loading,
+    exercise,
+    exerciseNames,
+    loadExercises
+  ]);
+
   const onChangeSelectExercise = e => {
     loadExercise(e.target.value);
     loadExercises({ name: e.target.value });
@@ -20,24 +31,22 @@ const ExerciseForm = ({
 
   return (
     <Fragment>
-      <form>
-        <fieldset disabled={loading ? 'disabled': ''}>
-          <div className="field">
-            <label className="label">Exercise</label>
-            <div className="control">
-              <div className="select">
-                <select
-                  onChange={e => onChangeSelectExercise(e)}
-                  value={exercise}
-                >
-                  {exerciseNames.map((name, index) => (
-                    <option key={index} value={name}>{name}</option>
-                  ))}
-                </select>
-              </div>
+      <form className="form-exercise">
+        <div className="field">
+          <label className="label">Exercise</label>
+          <div className="control">
+            <div className="select">
+              <select
+                onChange={e => onChangeSelectExercise(e)}
+                value={exercise}
+              >
+                {exerciseNames.map((name, index) => (
+                  <option key={index} value={name}>{name}</option>
+                ))}
+              </select>
             </div>
           </div>
-        </fieldset>
+        </div>
       </form>
     </Fragment>
   );

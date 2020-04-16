@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { loadExercise, loadExercises } from '../../actions/exercise';
 import { connect } from 'react-redux';
@@ -12,6 +12,17 @@ const ExerciseForm = ({
   loadExercise,
   loadExercises
 }) => {
+
+  useEffect(() => {
+    if (!loading && exercise === '' && exerciseNames && exerciseNames.length > 0) {
+      loadExercises({ name: exerciseNames[0] });
+    }
+  }, [
+    loading,
+    exercise,
+    exerciseNames,
+    loadExercises
+  ]);
 
   const onChangeSelectExercise = e => {
     loadExercise(e.target.value);

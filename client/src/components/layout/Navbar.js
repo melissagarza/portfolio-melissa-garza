@@ -19,7 +19,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div id="navbarBasicExample" className="navbar-menu">
+        <div className="navbar-menu">
           <div className="navbar-start">
             <Link to="/" className="navbar-item">
               Resume

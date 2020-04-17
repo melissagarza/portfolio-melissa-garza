@@ -47,10 +47,10 @@ const Navbar = () => {
           <div className="navbar-end">
             <div className="navbar-item">
               <div className="buttons">
-                <Link to="/" className="button is-primary">
-                  <strong>Sign up</strong>
+                <Link to="/register" className="button is-primary">
+                  <strong>Register</strong>
                 </Link>
-                <Link to="/" className="button is-light">
+                <Link to="/login" className="button is-light">
                   Log in
                 </Link>
               </div>

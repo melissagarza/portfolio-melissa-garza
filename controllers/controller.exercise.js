@@ -6,7 +6,11 @@ const getExercises = async (req, res) => {
     res.send(exercises);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({
+      errors: [
+        { msg: err.message }
+      ]
+    });
   }
 };
 
@@ -16,7 +20,11 @@ const getExerciseNames = async (req, res) => {
     res.send(exerciseNames);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({
+      errors: [
+        { msg: err.message }
+      ]
+    });
   }
 };
 
@@ -26,7 +34,11 @@ const getExercisesByUser = async (req, res) => {
     res.json(exercises);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({
+      errors: [
+        { msg: err.message }
+      ]
+    });
   }
 };
 
@@ -36,7 +48,11 @@ const getExerciseNamesByUser = async (req, res) => {
     res.send(exerciseNames);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({
+      errors: [
+        { msg: err.message }
+      ]
+    });
   }
 };
 
@@ -57,7 +73,11 @@ const upload = async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ msg: err.message });
+    res.status(500).json({
+      errors: [
+        { msg: err.message }
+      ]
+    });
   }
 };
 

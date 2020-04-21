@@ -12,7 +12,7 @@ export const createChart = (name, exercises) => ({
   chartPadding: {
     top: 50,
     right: 50,
-    bottom: 20,
+    bottom: 10,
     left: 40
   },
 
@@ -54,20 +54,13 @@ export const createChart = (name, exercises) => ({
         return scaleY(volume);
       });
 
-    const generatorLine = d3.area()
-      .x(d => scaleX(this.parseDate(d)))
-      .y(d => {
-        const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-        return scaleY(volume);
-      });
-
     const chartSvgWrapper = d3.select(`.container-${name}`)
       .append('div')
       .attr('class', `svg-wrapper-${name}`);
 
     chartSvgWrapper.append('h3')
       .attr('class', `title-${name}`)
-      .text(`${exercises[0].name} by ${exercises[0].user.alias}`);
+      .text(`${exercises[0].name} Chart for ${exercises[0].user.alias}`);
 
     const chartSvg = chartSvgWrapper.append('svg')
       .attr('class', `svg-${name}`)
@@ -77,7 +70,7 @@ export const createChart = (name, exercises) => ({
 
     const groupMain = chartSvg.append('g')
       .attr('class', `group-main-${name}`)
-      .attr('transform', 'scale(0.95)');
+      .attr('transform', 'scale(0.93)');
 
     const groupChart = groupMain.append('g')
       .attr('class', `group-chart-${name}`)
@@ -94,10 +87,6 @@ export const createChart = (name, exercises) => ({
     groupChart.append('path')
       .attr('class', `area-${name}`)
       .attr('d', generatorArea(dates));
-
-    groupChart.append('path')
-      .attr('class', `line-${name}`)
-      .attr('d', generatorLine(dates));
 
     groupChart.selectAll(`circle.point-${name}`)
       .data(dates)

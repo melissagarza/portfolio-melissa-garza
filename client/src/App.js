@@ -1,21 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import setAuthToken from './utils/setAuthToken';
+import { loadUser } from './actions/auth';
+import setupFontAwesomeLibrary from './fontLibrary';
 import { Provider } from 'react-redux';
-import store from './store';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import { store, persistor } from './store';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
+import Alert from './components/layout/Alert';
+import Loading from './components/layout/Loading';
 import Routes from './components/routes/Routes';
 import Footer from './components/layout/Footer';
 
 const App = () => {
+
+  useEffect(() => {
+    setAuthToken(store.getState().auth.token);
+    store.dispatch(loadUser());
+  });
+
+  setupFontAwesomeLibrary();
+
   return (
     <Provider store={store}>
-      <Router>
-        <Navbar />
-        <div className="container">
-          <Routes />
-        </div>
-        <Footer />
-      </Router>
+      <PersistGate loading={<Loading />} persistor={persistor}>
+        <Router>
+          <Navbar />
+          <div className="container">
+            <Alert />
+            <Routes />
+          </div>
+          <Footer />
+        </Router>
+      </PersistGate>
     </Provider>
   );
 };

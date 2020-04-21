@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addAlert } from '../../actions/alert';
+import { register } from '../../actions/auth';
 
-const Register = ({ addAlert }) => {
+const Register = ({ addAlert, register }) => {
 
   const [formData, setFormData] = useState({
     username: '',
@@ -21,7 +22,7 @@ const Register = ({ addAlert }) => {
     if (password !== passwordConfirm) {
       addAlert('Passwords do not match', 'danger');
     } else {
-      console.log('Success');
+      register({ username, password });
     }
   };
 
@@ -84,7 +85,11 @@ const Register = ({ addAlert }) => {
 };
 
 Register.propTypes = {
-  addAlert: PropTypes.func.isRequired
+  addAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired
 };
 
-export default connect(null, { addAlert })(Register);
+export default connect(null, {
+  addAlert,
+  register
+})(Register);

@@ -22,6 +22,8 @@ export const register = ({ username, password}) => async dispatch => {
       type: AUTH_REGISTER_SUCCESS,
       payload: res.data
     });
+
+    dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 
@@ -50,6 +52,8 @@ export const login = ({ username, password }) => async dispatch => {
       type: AUTH_LOGIN,
       payload: res.data
     });
+
+    dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 
@@ -59,7 +63,7 @@ export const login = ({ username, password }) => async dispatch => {
 
     dispatch({
       type: AUTH_LOGOUT
-    }); 
+    });
   }
 };
 
@@ -86,4 +90,10 @@ export const loadUser = () => async (dispatch, getState) => {
       });
     }
   }
+};
+
+export const logout = () => dispatch => {
+  dispatch({
+    type: AUTH_LOGOUT
+  });
 };

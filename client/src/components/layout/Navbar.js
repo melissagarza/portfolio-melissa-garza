@@ -1,7 +1,51 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { logout } from '../../actions/auth';
 
-const Navbar = () => {
+const Navbar = ({
+  auth: {
+    isAuthenticated,
+    user
+  },
+  logout
+}) => {
+
+  const onClickLogout = e => {
+    e.preventDefault();
+    logout();
+  };
+
+  const linksAuthenticated = (
+    <Fragment>
+      {user && <p>
+        {`Hello, ${user.username}`}
+      </p>}
+      <div className="buttons">
+        <button
+          onClick={e => onClickLogout(e)}
+          className="button is-light"
+        >
+          Log Out
+        </button>
+      </div>
+    </Fragment>
+  );
+
+  const linksGuest = (
+    <Fragment>
+      <div className="buttons">
+        <Link to="/register" className="button is-primary">
+          <strong>Register</strong>
+        </Link>
+        <Link to="/login" className="button is-light">
+          Log in
+        </Link>
+      </div>
+    </Fragment>
+  );
+
   return (
     <Fragment>
       <nav className="navbar" role="navigation" aria-label="main navigation">
@@ -46,14 +90,7 @@ const Navbar = () => {
 
           <div className="navbar-end">
             <div className="navbar-item">
-              <div className="buttons">
-                <Link to="/register" className="button is-primary">
-                  <strong>Register</strong>
-                </Link>
-                <Link to="/login" className="button is-light">
-                  Log in
-                </Link>
-              </div>
+              {isAuthenticated ? linksAuthenticated : linksGuest}
             </div>
           </div>
         </div>
@@ -62,4 +99,11 @@ const Navbar = () => {
   );
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  auth: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ auth }) => ({ auth });
+
+export default connect(mapStateToProps, { logout })(Navbar);

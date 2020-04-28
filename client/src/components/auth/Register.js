@@ -1,11 +1,12 @@
 import React, { Fragment, useState } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 
-const Register = ({ addAlert, register }) => {
+const Register = ({ addAlert, register, auth: { isAuthenticated } }) => {
 
   const [formData, setFormData] = useState({
     username: '',
@@ -26,8 +27,15 @@ const Register = ({ addAlert, register }) => {
     }
   };
 
+  if (isAuthenticated) {
+    return (
+      <Redirect exact to="/" />
+    );
+  }
+
   return (
     <Fragment>
+      <h1 className="title">Register</h1>
       <form onSubmit={e => onSubmit(e)}>
         <div className="field">
           <label className="label">Username</label>
@@ -80,16 +88,22 @@ const Register = ({ addAlert, register }) => {
           </div>
         </div>
       </form>
+      <p>
+        Already have an account? <Link to="/login">Log in here.</Link>
+      </p>
     </Fragment>
   );
 };
 
 Register.propTypes = {
   addAlert: PropTypes.func.isRequired,
-  register: PropTypes.func.isRequired
+  register: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
-export default connect(null, {
+const mapStateToProps = ({ auth }) => ({ auth });
+
+export default connect(mapStateToProps, {
   addAlert,
   register
 })(Register);

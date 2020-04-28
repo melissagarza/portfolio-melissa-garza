@@ -1,5 +1,6 @@
 export const ALERT_ADD = 'ALERT_ADD';
 export const ALERT_REMOVE = 'ALERT_REMOVE';
+export const AUTH_LOGIN = 'AUTH_LOGIN';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 export const AUTH_REGISTER_SUCCESS = 'AUTH_REGISTER_SUCCESS';
 export const AUTH_USER_LOAD = 'AUTH_USER_LOAD';

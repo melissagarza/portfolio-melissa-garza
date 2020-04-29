@@ -49,7 +49,7 @@ const Navbar = ({
   return (
     <Fragment>
       <nav className="navbar" role="navigation" aria-label="main navigation">
-      <div className="navbar-brand">
+        <div className="navbar-brand">
           <Link className="navbar-item" to="/">
             <h1 className="title">
               Melissa Garza's Portfolio

@@ -6,10 +6,9 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { store, persistor } from './store';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Navbar from './components/layout/Navbar';
-import Alert from './components/layout/Alert';
 import Loading from './components/layout/Loading';
-import Routes from './components/routes/Routes';
+import Header from './components/layout/Header';
+import Main from './components/layout/Main';
 import Footer from './components/layout/Footer';
 
 const App = () => {
@@ -25,11 +24,8 @@ const App = () => {
     <Provider store={store}>
       <PersistGate loading={<Loading />} persistor={persistor}>
         <Router>
-          <Navbar />
-          <div className="container">
-            <Alert />
-            <Routes />
-          </div>
+          <Header />
+          <Main />
           <Footer />
         </Router>
       </PersistGate>

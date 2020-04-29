@@ -4,7 +4,7 @@ import Routes from '../routes/Routes';
 
 const Main = () => {
   return (
-    <main>
+    <main role="main">
       <Alert />
       <Routes />
     </main>

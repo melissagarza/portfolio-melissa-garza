@@ -66,7 +66,7 @@ const Login = ({ addAlert, login, auth: { isAuthenticated } }) => {
           <div className="control">
             <button className="button is-link">Submit</button>
           </div>
-          <p>
+          <p className="mt-2">
             Don't have an account? <Link to="/register">Register here.</Link>
           </p>
         </div>

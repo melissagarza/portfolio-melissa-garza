@@ -2,25 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { removeAlert } from '../../actions/alert';
+import { Alert as AlertBS } from 'react-bootstrap';
 
 const Alert = ({ alerts, removeAlert }) => {
 
-  const onClickDelete = (e, id) => {
-    e.preventDefault();
+  const onClickDelete = (id) => {
     removeAlert(id);
   };
 
   if (alerts !== null && alerts.length > 0) {
     return alerts.map(alert => {
       const { id, msg, alertType } = alert;
+
       return (
-        <div key={id} className={`notification is-light is-${alertType}`}>
-          <button
-            className="delete"
-            onClick={e => onClickDelete(e, id)}
-          ></button>
+        <AlertBS
+          key={id}
+          variant={alertType}
+          onClose={() => onClickDelete(id)}
+          dismissible
+        >
           {msg}
-        </div>
+        </AlertBS>
       );
     });
   }

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loading from '../layout/Loading';
@@ -16,9 +16,7 @@ const ExerciseChart = ({ exercise: { exercise, exercises, loading } }) => {
   return loading ? (
     <Loading />
   ) : (
-    <Fragment>
-      <div className="container-public"></div>
-    </Fragment>
+    <div className="container-public"></div>
   );
 };
 

@@ -1,11 +1,11 @@
 import React from 'react';
 
 const Footer = () => (
-  <footer className="footer">
-    <div className="content has-text-centered">
-      <p>
+  <footer className="footer mt-auto py-3">
+    <div className="container">
+      <span className="text-muted">
         Melissa Garza's Portfolio
-      </p>
+      </span>
     </div>
   </footer>
 );

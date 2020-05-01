@@ -1,8 +1,14 @@
 import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
+import { LinkContainer } from "react-router-bootstrap";
+import {
+  Button,
+  Nav,
+  NavDropdown,
+  Navbar as NavbarBS
+} from 'react-bootstrap';
 
 const Navbar = ({
   auth: {
@@ -19,83 +25,66 @@ const Navbar = ({
 
   const linksAuthenticated = (
     <Fragment>
-      {user && <p>
-        {`Hello, ${user.username}`}
-      </p>}
-      <div className="buttons">
-        <button
+      <Nav.Item>
+        {user && <span>
+          {`Hello, ${user.username}`}
+        </span>}
+        <Button
           onClick={e => onClickLogout(e)}
-          className="button is-light"
+          className="ml-4"
         >
           Log Out
-        </button>
-      </div>
+        </Button>
+      </Nav.Item>
     </Fragment>
   );
-
   const linksGuest = (
     <Fragment>
-      <div className="buttons">
-        <Link to="/register" className="button is-primary">
-          <strong>Register</strong>
-        </Link>
-        <Link to="/login" className="button is-light">
-          Log in
-        </Link>
-      </div>
+      <Nav.Item>
+        <LinkContainer to="/register">
+          <Nav.Link>
+              Register
+          </Nav.Link>
+        </LinkContainer>
+      </Nav.Item>
+      <Nav.Item>
+        <LinkContainer to="/login">
+          <Nav.Link>
+              Log In
+          </Nav.Link>
+        </LinkContainer>
+      </Nav.Item>
     </Fragment>
   );
 
   return (
-    <Fragment>
-      <nav className="navbar" role="navigation" aria-label="main navigation">
-      <div className="navbar-brand">
-          <Link className="navbar-item" to="/">
-            <h1 className="title">
-              Melissa Garza's Portfolio
-            </h1>
-          </Link>
-
-          <Link to="/" role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </Link>
-        </div>
-
-        <div className="navbar-menu">
-          <div className="navbar-start">
-            <Link to="/" className="navbar-item">
+    <NavbarBS>
+      <NavbarBS.Brand href="/">Melissa Garza's Portfolio</NavbarBS.Brand>
+      <NavbarBS.Toggle aria-controls="basic-navbar-nav" />
+      <NavbarBS.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto">
+          <LinkContainer to="/">
+            <Nav.Link>
               Resume
-            </Link>
-
-            <a href="https://github.com/melissagarza" className="navbar-item" rel="noopener noreferrer" target="_blank">
-              GitHub
-            </a>
-
-            <div className="navbar-item has-dropdown is-hoverable">
-              <Link to="/" className="navbar-link">
-                Projects
-              </Link>
-              <div className="navbar-dropdown">
-                <Link to="/exercises" className="navbar-item">
-                  Exercises
-                </Link>
-                <Link to="/" className="navbar-item">
-                  Bubble Chart
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="navbar-end">
-            <div className="navbar-item">
-              {isAuthenticated ? linksAuthenticated : linksGuest}
-            </div>
-          </div>
-        </div>
-      </nav>
-    </Fragment>
+            </Nav.Link>
+          </LinkContainer>
+          <Nav.Link href="https://github.com/melissagarza" rel="noopener noreferrer" target="_blank">
+            GitHub
+          </Nav.Link>
+          <NavDropdown title="Projects">
+            <NavDropdown.Item href="/exercises">
+              Exercises
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/">
+              Bubble Chart
+            </NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+        <Nav className="justify-content-end">
+          {isAuthenticated ? linksAuthenticated : linksGuest}
+        </Nav>
+      </NavbarBS.Collapse>
+    </NavbarBS>
   );
 }
 

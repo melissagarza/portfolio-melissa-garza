@@ -1,10 +1,11 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addAlert } from '../../actions/alert';
 import { login } from '../../actions/auth';
+import { Form, Button } from 'react-bootstrap';
 
 const Login = ({ addAlert, login, auth: { isAuthenticated } }) => {
 
@@ -29,49 +30,45 @@ const Login = ({ addAlert, login, auth: { isAuthenticated } }) => {
   }
 
   return (
-    <Fragment>
-      <h1 className="title">Log In</h1>
-      <form onSubmit={e => onSubmit(e)}>
-        <div className="field">
-          <label className="label">Username</label>
-          <div className="control has-icons-left">
-            <input
-              className="input"
-              type="text"
-              name="username"
-              value={username}
-              onChange={e => onChange(e)}
-            />
-            <span className="icon is-small is-left">
-              <FontAwesomeIcon icon="user" />
-            </span>
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Password</label>
-          <div className="control has-icons-left">
-            <input
-              className="input"
-              type="password"
-              name="password"
-              value={password}
-              onChange={e => onChange(e)}
-            />
-            <span className="icon is-small is-left">
-              <FontAwesomeIcon icon="asterisk" />
-            </span>
-          </div>
-        </div>
-        <div className="field">
-          <div className="control">
-            <button className="button is-link">Submit</button>
-          </div>
-          <p>
-            Don't have an account? <Link to="/register">Register here.</Link>
-          </p>
-        </div>
-      </form>
-    </Fragment>
+    <div className="container">
+      <h1 className="mb-5">Log In</h1>
+      <Form onSubmit={e => onSubmit(e)}>
+        <Form.Group>
+          <Form.Label>
+            <FontAwesomeIcon icon="user" className="mr-2" />
+            Username
+          </Form.Label>
+          <Form.Control
+            type="text"
+            name="username"
+            value={username}
+            onChange={e => onChange(e)}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>
+            <FontAwesomeIcon icon="asterisk" className="mr-2" />
+            Password
+          </Form.Label>
+          <Form.Control
+            type="password"
+            name="password"
+            value={password}
+            onChange={e => onChange(e)}
+          />
+        </Form.Group>
+        <Button
+          variant="primary"
+          type="submit"
+          className="mt-2"
+        >
+          Submit
+        </Button>
+      </Form>
+      <p className="mt-2">
+        Don't have an account? <Link to="/register">Register here.</Link>
+      </p>
+    </div>
   );
 };
 

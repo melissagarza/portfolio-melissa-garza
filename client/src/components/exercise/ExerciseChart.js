@@ -17,14 +17,16 @@ const ExerciseChart = ({
 
   useEffect(() => {
     if (!loading) {
-      let chart = createChart('public', exercises);
-      let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);
-      let chartUser = createChart('user', exercisesUser);
-
+      let chart = createChart('public', exercises, 'All Users');
       chart.draw();
-      chartUser.draw();
+
+      if (isAuthenticated) {
+        let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);
+        let chartUser = createChart('user', exercisesUser, 'You');
+        chartUser.draw();
+      }
     }
-  }, [loading, exercises, user]);
+  }, [loading, exercises, isAuthenticated, user]);
 
   return loading ? (
     <Loading />

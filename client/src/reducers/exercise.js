@@ -1,9 +1,11 @@
 import {
-  EXERCISE_LOAD,
   EXERCISE_LIST_CLEAR,
   EXERCISE_LIST_ERROR,
   EXERCISE_LIST_LOAD,
-  EXERCISE_LIST_NAMES
+  EXERCISE_LIST_NAMES,
+  EXERCISE_LOAD,
+  EXERCISE_UPLOAD_ERROR,
+  EXERCISE_UPLOAD_SUCCESS
 } from '../actions/types';
 
 const initialState = {
@@ -43,7 +45,13 @@ export default (state = initialState, action) => {
         exercises: [],
         loading: false
       };
+    case EXERCISE_UPLOAD_SUCCESS:
+      return {
+        ...state,
+        loading: false
+      };
     case EXERCISE_LIST_ERROR:
+    case EXERCISE_UPLOAD_ERROR:
       return {
         ...state,
         errors: payload,

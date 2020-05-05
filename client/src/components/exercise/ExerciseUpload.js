@@ -1,16 +1,32 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { uploadWorkoutHistory } from '../../actions/exercise';
+import {
+  uploadWorkoutHistory,
+  loadExerciseNames,
+  loadExercise,
+  loadExercises
+} from '../../actions/exercise';
 import { Form, Button } from 'react-bootstrap';
 
-const ExerciseUpload = ({ uploadWorkoutHistory }) => {
+const ExerciseUpload = ({
+  exercise: {
+    loading
+  },
+  uploadWorkoutHistory,
+  loadExerciseNames,
+  loadExercise,
+  loadExercises
+}) => {
 
   const [file, setFile] = useState(null);
 
-  const uploadFile = e => {
+  const uploadFile = async e => {
     e.preventDefault();
-    uploadWorkoutHistory(file);
+    await uploadWorkoutHistory(file);
+    await loadExerciseNames();
+    loadExercise();
+    await loadExercises();
   };
 
   return (
@@ -34,6 +50,7 @@ const ExerciseUpload = ({ uploadWorkoutHistory }) => {
           type="submit"
           onClick={e => uploadFile(e)}
           className="mt-2"
+          disabled={loading ? 'disabled' : ''}
         >
           Upload
         </Button>
@@ -43,7 +60,18 @@ const ExerciseUpload = ({ uploadWorkoutHistory }) => {
 };
 
 ExerciseUpload.propTypes = {
-  uploadWorkoutHistory: PropTypes.func.isRequired
+  exercise: PropTypes.object.isRequired,
+  uploadWorkoutHistory: PropTypes.func.isRequired,
+  loadExerciseNames: PropTypes.func.isRequired,
+  loadExercise: PropTypes.func.isRequired,
+  loadExercises: PropTypes.func.isRequired
 };
 
-export default connect(null, { uploadWorkoutHistory })(ExerciseUpload);
+const mapStateToProps = ({ exercise }) => ({ exercise });
+
+export default connect(mapStateToProps, {
+  uploadWorkoutHistory,
+  loadExerciseNames,
+  loadExercise,
+  loadExercises
+})(ExerciseUpload);

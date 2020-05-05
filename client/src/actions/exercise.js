@@ -22,8 +22,6 @@ export const uploadWorkoutHistory = file => async dispatch => {
     axios.post('api/exercises/upload', data, config);
 
     dispatch({ type: EXERCISE_UPLOAD_SUCCESS });
-
-    loadExercises();
   } catch (err) {
     let payload = {
       status: err.response ? err.response.status : '',

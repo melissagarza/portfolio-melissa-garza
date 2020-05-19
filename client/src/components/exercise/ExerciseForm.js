@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { loadExercise, loadExercises } from '../../actions/exercise';
 import { connect } from 'react-redux';
@@ -31,25 +31,30 @@ const ExerciseForm = ({
   };
 
   return (
-    <Form className="mb-5">
-      <Form.Group>
-        <Form.Label>
-          Exercise
-        </Form.Label>
-        <Form.Control
-          as="select"
-          onChange={e => onChangeSelectExercise(e)}
-          value={exercise}
-        >
-          {exerciseNames.map((name, index) => (
-            <option key={index} value={name}>{name}</option>
-          ))}
-        </Form.Control>
-        <Form.Text className="text-muted">
-          Note: Calculating volume only works for certain exercises. Some exercises will show unwanted results.
-        </Form.Text>
-      </Form.Group>
-    </Form>
+    <Fragment>
+      <h2>
+        Select An Exercise
+      </h2>
+      <Form className="mb-5">
+        <Form.Group>
+          <Form.Label>
+            Exercise
+          </Form.Label>
+          <Form.Control
+            as="select"
+            onChange={e => onChangeSelectExercise(e)}
+            value={exercise}
+          >
+            {exerciseNames.map((name, index) => (
+              <option key={index} value={name}>{name}</option>
+            ))}
+          </Form.Control>
+          <Form.Text className="text-muted">
+            Note: Calculating volume only works for certain exercises. Some exercises will show unwanted results.
+          </Form.Text>
+        </Form.Group>
+      </Form>
+    </Fragment>
   );
 };
 

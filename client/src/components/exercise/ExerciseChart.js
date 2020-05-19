@@ -1,30 +1,49 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loading from '../layout/Loading';
 import { createChart } from '../../utils/chart';
 
-const ExerciseChart = ({ exercise: { exercise, exercises, loading } }) => {
+const ExerciseChart = ({
+  auth: {
+    isAuthenticated,
+    user
+  },
+  exercise: {
+    exercise,
+    exercises,
+    loading
+  }}) => {
 
   useEffect(() => {
     if (!loading) {
-      let chart = createChart('public', exercises);
+      let chart = createChart('public', exercises, 'All Users');
       chart.draw();
+
+      if (isAuthenticated) {
+        let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);
+        let chartUser = createChart('user', exercisesUser, 'You');
+        chartUser.draw();
+      }
     }
-  }, [loading, exercises]);
+  }, [loading, exercises, isAuthenticated, user]);
 
   return loading ? (
     <Loading />
   ) : (
-    <div className="container-public"></div>
+    <Fragment>
+      {isAuthenticated && (<div className="container-user"></div>)}
+      <div className="container-public"></div>
+    </Fragment>
   );
 };
 
 ExerciseChart.propTypes = {
+  auth: PropTypes.object.isRequired,
   exercise: PropTypes.object,
   exercises: PropTypes.object
 };
 
-const mapStateToProps = ({ exercise }) => ({ exercise });
+const mapStateToProps = ({ auth, exercise }) => ({ auth, exercise });
 
 export default connect(mapStateToProps, {})(ExerciseChart);

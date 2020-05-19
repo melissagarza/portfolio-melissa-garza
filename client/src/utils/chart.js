@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import _ from 'underscore';
 
-export const createChart = (name, exercises) => ({
+export const createChart = (name, exercises, title) => ({
 
   width: 800,
 
@@ -60,7 +60,7 @@ export const createChart = (name, exercises) => ({
 
     chartSvgWrapper.append('h3')
       .attr('class', `title-${name}`)
-      .text(`${exercises[0].name} Chart for ${exercises[0].user.alias}`);
+      .text(`${exercises[0].name} Chart for ${title}`);
 
     const chartSvg = chartSvgWrapper.append('svg')
       .attr('class', `svg-${name}`)

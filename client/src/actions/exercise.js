@@ -1,12 +1,39 @@
 import axios from 'axios';
 import qs from 'qs';
 import {
-  EXERCISE_LOAD,
   EXERCISE_LIST_CLEAR,
   EXERCISE_LIST_ERROR,
   EXERCISE_LIST_LOAD,
-  EXERCISE_LIST_NAMES
+  EXERCISE_LIST_NAMES,
+  EXERCISE_LOAD,
+  EXERCISE_UPLOAD_ERROR,
+  EXERCISE_UPLOAD_SUCCESS
 } from './types';
+
+export const uploadWorkoutHistory = file => async dispatch => {
+  try {
+    const data = new FormData();
+    const config = {
+      'Content-Type': 'multipart/form-data'
+    };
+
+    data.append('workoutExport', file);
+
+    axios.post('api/exercises/upload', data, config);
+
+    dispatch({ type: EXERCISE_UPLOAD_SUCCESS });
+  } catch (err) {
+    let payload = {
+      status: err.response ? err.response.status : '',
+      msg: err.response ? err.response.statusText : err.msg
+    };
+
+    dispatch({
+      type: EXERCISE_UPLOAD_ERROR,
+      payload
+    });
+  }
+};
 
 export const loadExercise = exerciseName => dispatch => {
   dispatch({

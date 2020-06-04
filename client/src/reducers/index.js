@@ -9,7 +9,8 @@ import exercise from './exercise';
 const persistConfigRoot = {
   key: 'root',
   storage: storage,
-  stateReconciler: autoMergeLevel2
+  stateReconciler: autoMergeLevel2,
+  whitelist: ['auth']
 };
 
 const persistConfigAuth = {

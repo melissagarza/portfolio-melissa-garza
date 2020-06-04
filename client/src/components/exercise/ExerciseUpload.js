@@ -50,7 +50,7 @@ const ExerciseUpload = ({
           type="submit"
           onClick={e => uploadFile(e)}
           className="mt-2"
-          disabled={loading ? 'disabled' : ''}
+          disabled={loading || file === null ? 'disabled' : ''}
         >
           Upload
         </Button>

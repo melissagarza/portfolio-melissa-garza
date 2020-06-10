@@ -63,7 +63,7 @@ const Navbar = ({
       <NavbarBS.Toggle aria-controls="basic-navbar-nav" />
       <NavbarBS.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <LinkContainer to="/">
+          <LinkContainer to="/resume">
             <Nav.Link>
               Resume
             </Nav.Link>

@@ -33,7 +33,9 @@
     "express-fileupload": "^1.1.6",
     "express-validator": "^6.4.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "5.9.4"
+    "mongoose": "5.9.4",
+    "pdfjs-dist": "^2.4.456",
+    "react-pdf": "^4.1.0"
   },
   "devDependencies": {
     "concurrently": "^5.1.0",

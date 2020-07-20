@@ -41,6 +41,7 @@ const ExerciseChart = ({
   ) : (
     <Fragment>
       {isAuthenticated && (<div className="container-user"></div>)}
+      <div className="container-test-chart"></div>
       <div className="container-public"></div>
     </Fragment>
   );

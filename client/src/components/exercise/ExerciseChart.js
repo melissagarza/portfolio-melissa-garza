@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loading from '../layout/Loading';
 import { createChart } from '../../utils/chart';
+import { createExerciseChart } from '../../utils/exerciseChart';
 
 const ExerciseChart = ({
   auth: {
@@ -19,6 +20,13 @@ const ExerciseChart = ({
     if (!loading) {
       let chart = createChart('public', exercises, 'All Users');
       chart.draw();
+
+      // TESTING
+      let exerciseChart = createExerciseChart({
+        name: 'test-chart',
+        title: 'Test Exercise Chart'
+      });
+      exerciseChart.draw(exercises, 'reps');
 
       if (isAuthenticated) {
         let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);

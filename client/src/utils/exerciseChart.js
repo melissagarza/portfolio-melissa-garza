@@ -36,40 +36,36 @@ export const createExerciseChart = ({ name, title }) => {
     const axisY = d3.axisLeft(scaleY)
       .ticks(10, '.0f');
 
-    const chartSvgWrapper = d3.select(`.container-${name}`)
+    const chartSvgWrapper = d3.select(`.ec-${name}`)
       .append('div')
-      .attr('class', `svg-wrapper-${name}`);
+      .attr('class', `ec-svg-wrapper ec-svg-wrapper-${name}`);
 
     chartSvgWrapper.append('h3')
-      .attr('class', `title-${name}`)
-      .text(`${exercises[0].name} Chart for ${title}`);
+      .attr('class', `ec-title ec-title-${name}`)
+      .text(`${exercises[0].name} for ${title}`);
 
     const chartSvg = chartSvgWrapper.append('svg')
-      .attr('class', `svg-${name}`)
+      .attr('class', `ec-svg ec-svg-${name}`)
       .attr('xmlns', 'http://www.w3.org/2000/svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
       .attr('preserveAspectRatio', 'none');
 
     const groupMain = chartSvg.append('g')
-      .attr('class', `group-main-${name}`)
+      .attr('class', `ec-group-main ec-group-main-${name}`)
       .attr('transform', 'scale(0.93)');
 
     const groupChart = groupMain.append('g')
-      .attr('class', `group-chart-${name}`)
+      .attr('class', `ec-group-chart ec-group-chart-${name}`)
       .attr('transform', `translate(${margin.left}, -${margin.bottom})`);
 
     const groupAxisX = groupMain.append('g')
-      .attr('class', `group-axis-x-${name}`)
-      .attr('transform', `translate(${margin.left}, ${height - margin.bottom})`);
-
-    const groupAxisY = groupMain.append('g')
-      .attr('class', `group-axis-y-${name}`)
-      .attr('transform', `translate(${margin.left}, -${margin.bottom})`);
-
-    groupAxisX.append('g')
+      .attr('class', `ec-group-axis-x ec-group-axis-x-${name}`)
+      .attr('transform', `translate(${margin.left}, ${height - margin.bottom})`)
       .call(axisX);
 
-    groupAxisY.append('g')
+    const groupAxisY = groupMain.append('g')
+      .attr('class', `ec-group-axis-y ec-group-axis-y-${name}`)
+      .attr('transform', `translate(${margin.left}, -${margin.bottom})`)
       .call(axisY);
 
     const drawVolume = () => {
@@ -89,14 +85,14 @@ export const createExerciseChart = ({ name, title }) => {
         });
       
       groupChart.append('path')
-        .attr('class', `area-${name}`)
+        .attr('class', `area area-${name}`)
         .attr('d', generatorArea(dates));
 
       groupChart.selectAll(`circle.point-${name}`)
         .data(dates)
         .enter()
         .append('circle')
-        .attr('class', `point-${name}`)
+        .attr('class', `point point-${name}`)
         .attr('cx', d => scaleX(parseDate(d)))
         .attr('cy', d => {
           const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);

@@ -3,34 +3,30 @@
 }
 
 .ec {
+  padding-top: 3rem;
+  margin-bottom: 3rem;
 
   .ec-svg-wrapper {
-    padding: 2rem 2rem 0 2rem;
-    margin-bottom: 3rem;
-    border: 1px solid $colorFitbodBlack;
 
     .ec-title {
       font-size: 1.875rem;
       font-weight: 700;
       margin-left: 3.75em;
-      margin-bottom: 2rem;
+      margin-bottom: 0;
     }
     
     .ec-svg {
   
-      .ec-group-main {
+      .ec-group-chart {
+
+        .area {
+          fill: $colorFitbod;
+          stroke: $colorFitbodDarkened;
+          stroke-width: 2px;
+        }
   
-        .ec-group-chart {
-  
-          .area {
-            fill: $colorFitbod;
-            stroke: $colorFitbodDarkened;
-            stroke-width: 2px;
-          }
-    
-          .point {
-            fill: $colorFitbodBlack;
-          }
+        .point {
+          fill: $colorFitbodBlack;
         }
       }
     }

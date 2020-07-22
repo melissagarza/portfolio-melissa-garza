@@ -28,7 +28,7 @@ const ExerciseChart = ({
         name: 'test',
         title: 'Test'
       });
-      exerciseChart.draw(exercises, 'volume');
+      exerciseChart.draw(exercises, 'reps');
 
       if (isAuthenticated) {
         let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);

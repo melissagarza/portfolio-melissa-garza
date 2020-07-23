@@ -73,17 +73,25 @@ export const createExerciseChart = ({ name, title }) => {
 
       scaleY.domain([0, maxVolume + (maxVolume * 0.1)]);
 
-      const generatorArea = d3.area()
-        .x(d => scaleX(parseDate(d)))
-        .y0(heightChart)
-        .y1(d => {
-          const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-          return scaleY(volume);
-        });
+      const generatorArea = (d, triggerAnim) => {
+        return (
+          d3.area()
+            .x(d => scaleX(parseDate(d)))
+            .y(heightChart)
+            .y1(d => {
+              if (!triggerAnim) return scaleY(0);
+
+              const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
+              return scaleY(volume);
+            })
+        )(d);
+      };
 
       groupChart.append('path')
         .attr('class', `area area-${name}`)
-        .attr('d', generatorArea(dates));
+        .attr('d', generatorArea(dates, false))
+        .transition(trans)
+        .attr('d', generatorArea(dates, true));
 
       const points = groupChart.selectAll(`point-${name}`)
         .data(dates);

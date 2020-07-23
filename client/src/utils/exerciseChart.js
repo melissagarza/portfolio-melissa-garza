@@ -13,6 +13,7 @@ export const createExerciseChart = ({ name, title }) => {
   };
   const widthChart = widthSvg - margin.left - margin.right;
   const heightChart = heightSvg - margin.top - margin.bottom;
+  const pointRadius = 4;
   const parseDate = d3.utcParse('%Y-%m-%dT%H:%M:%S.%LZ');
   const trans = d3.transition().duration(500);
 
@@ -95,7 +96,7 @@ export const createExerciseChart = ({ name, title }) => {
             const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
             return scaleY(volume);
           })
-          .attr('r', '3')
+          .attr('r', pointRadius)
         .merge(points)
           .transition(trans)
           .attr('class', `point point-${name}`)
@@ -104,7 +105,7 @@ export const createExerciseChart = ({ name, title }) => {
             const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
             return scaleY(volume);
           })
-          .attr('r', '3');
+          .attr('r', pointRadius);
 
       groupAxisX.transition(trans).call(axisX);
       groupAxisY.transition(trans).call(axisY);
@@ -127,6 +128,26 @@ export const createExerciseChart = ({ name, title }) => {
 
       scaleY.domain([0, maxReps]);
 
+      const generatorArea = (d, triggerAnim) => {
+        return (
+          d3.area()
+            .x(d => scaleX(parseDate(d)))
+            .y(heightChart)
+            .y1(d => {
+              if (!triggerAnim) return scaleY(0);
+
+              const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
+              return scaleY(recordWithMaxReps.reps);
+            })
+        )(d);
+      };
+
+      groupChart.append('path')
+        .attr('class', `area area-${name}`)
+        .attr('d', generatorArea(dates, false))
+        .transition(trans)
+        .attr('d', generatorArea(dates, true));
+
       const points = groupChart.selectAll(`point-${name}`)
         .data(dates);
 
@@ -137,7 +158,7 @@ export const createExerciseChart = ({ name, title }) => {
           .attr('class', `point-${name}`)
           .attr('cx', d => scaleX(parseDate(d)))
           .attr('cy', heightChart)
-          .attr('r', 5)
+          .attr('r', pointRadius)
         .merge(points)
           .transition(trans)
           .attr('cx', d => scaleX(parseDate(d)))

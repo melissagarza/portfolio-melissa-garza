@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loading from '../layout/Loading';
-import { createChart } from '../../utils/chart';
+import { createExerciseChart } from '../../utils/exerciseChart';
 
 const ExerciseChart = ({
   auth: {
@@ -17,13 +17,26 @@ const ExerciseChart = ({
 
   useEffect(() => {
     if (!loading) {
-      let chart = createChart('public', exercises, 'All Users');
-      chart.draw();
+      let chart = createExerciseChart({
+        name: 'public',
+        title: 'All Users'
+      });
+      chart.draw(exercises);
+
+      // TESTING
+      let exerciseChart = createExerciseChart({
+        name: 'test',
+        title: 'Test'
+      });
+      exerciseChart.draw(exercises, 'reps');
 
       if (isAuthenticated) {
         let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);
-        let chartUser = createChart('user', exercisesUser, 'You');
-        chartUser.draw();
+        let chartUser = createExerciseChart({
+          name: 'user',
+          title: 'You'
+        });
+        chartUser.draw(exercisesUser);
       }
     }
   }, [loading, exercises, isAuthenticated, user]);
@@ -32,8 +45,9 @@ const ExerciseChart = ({
     <Loading />
   ) : (
     <Fragment>
-      {isAuthenticated && (<div className="container-user"></div>)}
-      <div className="container-public"></div>
+      {isAuthenticated && (<div className="ec ec-user"></div>)}
+      <div className="ec ec-test"></div>
+      <div className="ec ec-public"></div>
     </Fragment>
   );
 };

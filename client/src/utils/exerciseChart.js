@@ -17,7 +17,7 @@ export const createExerciseChart = ({ name, title }) => {
   const parseDate = d3.utcParse('%Y-%m-%dT%H:%M:%S.%LZ');
   const trans = d3.transition().duration(500);
 
-  const draw = (exercises = [], type = 'volume') => {
+  const draw = (exercises = [], focus = 'volume') => {
 
     if (exercises.length <= 0) {
       return;
@@ -179,7 +179,7 @@ export const createExerciseChart = ({ name, title }) => {
       groupAxisY.transition(trans).call(axisY);
     };
 
-    switch (type) {
+    switch (focus) {
       case 'reps':
         drawReps();
         break;

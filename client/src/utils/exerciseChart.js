@@ -96,14 +96,13 @@ export const createExerciseChart = ({ name, title }) => {
       const points = groupChart.selectAll(`point-${name}`)
         .data(dates);
 
+      points.exit().remove();
+
       points.enter()
         .append('circle')
           .attr('class', `point point-${name}`)
           .attr('cx', d => scaleX(parseDate(d)))
-          .attr('cy', d => {
-            const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-            return scaleY(volume);
-          })
+          .attr('cy', d => heightChart)
           .attr('r', pointRadius)
         .merge(points)
           .transition(trans)

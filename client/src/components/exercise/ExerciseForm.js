@@ -35,7 +35,9 @@ const ExerciseForm = ({
     loading,
     exercise,
     exerciseNames,
-    loadExercises
+    loadExercise,
+    loadExercises,
+    loadExerciseFocus
   ]);
 
   const focusSelection = ['volume', 'reps'];

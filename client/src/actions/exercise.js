@@ -1,6 +1,7 @@
 import axios from 'axios';
 import qs from 'qs';
 import {
+  EXERCISE_FOCUS,
   EXERCISE_LIST_CLEAR,
   EXERCISE_LIST_ERROR,
   EXERCISE_LIST_LOAD,
@@ -101,6 +102,13 @@ export const loadExerciseNames = () => async dispatch => {
       payload
     });
   }
+};
+
+export const loadExerciseFocus = focus => async dispatch => {
+  dispatch({
+    type: EXERCISE_FOCUS,
+    payload: focus
+  });
 };
 
 export const clearExercises = () => async dispatch => {

@@ -17,7 +17,7 @@ export const createExerciseChart = ({ name, title }) => {
   const parseDate = d3.utcParse('%Y-%m-%dT%H:%M:%S.%LZ');
   const trans = d3.transition().duration(500);
 
-  const draw = (exercises = [], type = 'volume') => {
+  const draw = (exercises = [], focus = 'volume') => {
 
     if (exercises.length <= 0) {
       return;
@@ -38,7 +38,7 @@ export const createExerciseChart = ({ name, title }) => {
 
     chartSvgWrapper.append('h3')
       .attr('class', `ec-title ec-title-${name}`)
-      .text(`${exercises[0].name} for ${title}`);
+      .text(`${exercises[0].name} ${focus[0].toUpperCase() + focus.slice(1)} for ${title}`);
 
     const chartSvg = chartSvgWrapper.append('svg')
       .attr('class', `ec-svg ec-svg-${name}`)
@@ -96,14 +96,13 @@ export const createExerciseChart = ({ name, title }) => {
       const points = groupChart.selectAll(`point-${name}`)
         .data(dates);
 
+      points.exit().remove();
+
       points.enter()
         .append('circle')
           .attr('class', `point point-${name}`)
           .attr('cx', d => scaleX(parseDate(d)))
-          .attr('cy', d => {
-            const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-            return scaleY(volume);
-          })
+          .attr('cy', d => heightChart)
           .attr('r', pointRadius)
         .merge(points)
           .transition(trans)
@@ -179,7 +178,7 @@ export const createExerciseChart = ({ name, title }) => {
       groupAxisY.transition(trans).call(axisY);
     };
 
-    switch (type) {
+    switch (focus) {
       case 'reps':
         drawReps();
         break;

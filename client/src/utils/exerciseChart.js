@@ -102,11 +102,10 @@ export const createExerciseChart = ({ name, title }) => {
         .append('circle')
           .attr('class', `point point-${name}`)
           .attr('cx', d => scaleX(parseDate(d)))
-          .attr('cy', d => heightChart)
+          .attr('cy', heightChart)
           .attr('r', pointRadius)
         .merge(points)
           .transition(trans)
-          .attr('class', `point point-${name}`)
           .attr('cx', d => scaleX(parseDate(d)))
           .attr('cy', d => {
             const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
@@ -162,7 +161,7 @@ export const createExerciseChart = ({ name, title }) => {
 
       points.enter()
         .append('circle')
-          .attr('class', `point-${name}`)
+          .attr('class', `point point-${name}`)
           .attr('cx', d => scaleX(parseDate(d)))
           .attr('cy', heightChart)
           .attr('r', pointRadius)

@@ -26,8 +26,16 @@ export const createExerciseChart = ({ name, title }) => {
     const dataExercises = _.groupBy(exercises, exercise => exercise.date);
     const dates = _.keys(dataExercises).sort();
 
+    const scaleX = d3.scaleTime()
+      .domain(d3.extent(dates, date => parseDate(date)))
+      .range([0, widthChart]);
+
     const scaleY = d3.scaleLinear()
       .range([heightChart, 0]);
+
+    const axisX = d3.axisBottom(scaleX)
+      .tickFormat(d3.timeFormat('%b \'%y'))
+      .ticks(d3.timeMonth.every(1));
 
     const axisY = d3.axisLeft(scaleY)
       .ticks(10, '.0f');
@@ -57,21 +65,37 @@ export const createExerciseChart = ({ name, title }) => {
     const groupAxisY = groupChart.append('g')
       .attr('class', `ec-group-axis-y ec-group-axis-y-${name}`);
 
+    const groupChartArea = groupChart.append('g');
+
+    const groupChartPoints = groupChart.append('g');
+
+    const points = groupChartPoints.selectAll(`point-${name}`)
+      .data(dates);
+
+    points.exit().remove();
+
+    const pointsEnter = points.enter()
+      .append('circle')
+        .attr('class', `point point-${name}`)
+        .attr('cx', d => scaleX(parseDate(d)))
+        .attr('cy', heightChart)
+        .attr('r', pointRadius);
+
     const drawVolume = () => {
       const recordWithMaxVolume = _.max(dataExercises, recordsByDate => {
         return _.reduce(recordsByDate, (memo, record) => (memo + record.volume), 0);
       });
       const maxVolume = _.reduce(recordWithMaxVolume, (memo, record) => (memo + record.volume), 0);
 
-      const scaleX = d3.scaleTime()
-        .domain(d3.extent(dates, date => parseDate(date)))
-        .range([0, widthChart]);
-
-      const axisX = d3.axisBottom(scaleX)
-        .tickFormat(d3.timeFormat('%b \'%y'))
-        .ticks(d3.timeMonth.every(1));
-
       scaleY.domain([0, maxVolume + (maxVolume * 0.1)]);
+
+      pointsEnter.merge(points)
+        .transition(trans)
+        .attr('cx', d => scaleX(parseDate(d)))
+        .attr('cy', d => {
+          const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
+          return scaleY(volume);
+        });
 
       const generatorArea = (d, triggerAnim) => {
         return (
@@ -79,7 +103,7 @@ export const createExerciseChart = ({ name, title }) => {
             .x(d => scaleX(parseDate(d)))
             .y(heightChart)
             .y1(d => {
-              if (!triggerAnim) return scaleY(0);
+              if (!triggerAnim) return heightChart;
 
               const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
               return scaleY(volume);
@@ -87,32 +111,11 @@ export const createExerciseChart = ({ name, title }) => {
         )(d);
       };
 
-      groupChart.append('path')
+      groupChartArea.append('path')
         .attr('class', `area area-${name}`)
         .attr('d', generatorArea(dates, false))
         .transition(trans)
         .attr('d', generatorArea(dates, true));
-
-      const points = groupChart.selectAll(`point-${name}`)
-        .data(dates);
-
-      points.exit().remove();
-
-      points.enter()
-        .append('circle')
-          .attr('class', `point point-${name}`)
-          .attr('cx', d => scaleX(parseDate(d)))
-          .attr('cy', d => heightChart)
-          .attr('r', pointRadius)
-        .merge(points)
-          .transition(trans)
-          .attr('class', `point point-${name}`)
-          .attr('cx', d => scaleX(parseDate(d)))
-          .attr('cy', d => {
-            const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-            return scaleY(volume);
-          })
-          .attr('r', pointRadius);
 
       groupAxisX.transition(trans).call(axisX);
       groupAxisY.transition(trans).call(axisY);
@@ -125,15 +128,15 @@ export const createExerciseChart = ({ name, title }) => {
       });
       const maxReps = _.max(recordWithMaxReps, record => record.reps).reps;
 
-      const scaleX = d3.scaleTime()
-        .domain(d3.extent(dates, date => parseDate(date)))
-        .range([0, widthChart]);
-
-      const axisX = d3.axisBottom(scaleX)
-        .tickFormat(d3.timeFormat('%b \'%y'))
-        .ticks(d3.timeMonth.every(1));
-
       scaleY.domain([0, maxReps]);
+
+      pointsEnter.merge(points)
+        .transition(trans)
+        .attr('cx', d => scaleX(parseDate(d)))
+        .attr('cy', d => {
+          const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
+          return scaleY(recordWithMaxReps.reps);
+        });
 
       const generatorArea = (d, triggerAnim) => {
         return (
@@ -141,7 +144,7 @@ export const createExerciseChart = ({ name, title }) => {
             .x(d => scaleX(parseDate(d)))
             .y(heightChart)
             .y1(d => {
-              if (!triggerAnim) return scaleY(0);
+              if (!triggerAnim) return heightChart;
 
               const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
               return scaleY(recordWithMaxReps.reps);
@@ -149,30 +152,11 @@ export const createExerciseChart = ({ name, title }) => {
         )(d);
       };
 
-      groupChart.append('path')
+      groupChartArea.append('path')
         .attr('class', `area area-${name}`)
         .attr('d', generatorArea(dates, false))
         .transition(trans)
         .attr('d', generatorArea(dates, true));
-
-      const points = groupChart.selectAll(`point-${name}`)
-        .data(dates);
-
-      points.exit().remove();
-
-      points.enter()
-        .append('circle')
-          .attr('class', `point-${name}`)
-          .attr('cx', d => scaleX(parseDate(d)))
-          .attr('cy', heightChart)
-          .attr('r', pointRadius)
-        .merge(points)
-          .transition(trans)
-          .attr('cx', d => scaleX(parseDate(d)))
-          .attr('cy', d => {
-            const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
-            return scaleY(recordWithMaxReps.reps);
-          });
 
       groupAxisX.transition(trans).call(axisX);
       groupAxisY.transition(trans).call(axisY);
@@ -185,7 +169,6 @@ export const createExerciseChart = ({ name, title }) => {
       case 'volume':
       default:
         drawVolume();
-        break;
     }
   };
 

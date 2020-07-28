@@ -34,7 +34,15 @@ const ExerciseChart = ({
         chartUser.draw(exercisesUser, exerciseFocus);
       }
     }
-  }, [loading, exercises, exerciseFocus, isAuthenticated, user]);
+  }, [
+    loading,
+    chartAllUsers,
+    chartUser,
+    exercises,
+    exerciseFocus,
+    isAuthenticated,
+    user
+  ]);
 
   return loading ? (
     <Loading />

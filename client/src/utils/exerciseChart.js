@@ -38,7 +38,7 @@ export const createExerciseChart = ({ name, title }) => {
 
     chartSvgWrapper.append('h3')
       .attr('class', `ec-title ec-title-${name}`)
-      .text(`${exercises[0].name} for ${title}`);
+      .text(`${exercises[0].name} ${focus[0].toUpperCase() + focus.slice(1)} for ${title}`);
 
     const chartSvg = chartSvgWrapper.append('svg')
       .attr('class', `ec-svg ec-svg-${name}`)

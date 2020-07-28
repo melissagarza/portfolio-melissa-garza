@@ -27,6 +27,7 @@ const ExerciseForm = ({
 
   useEffect(() => {
     if (!loading && exercise === '' && exerciseNames && exerciseNames.length > 0) {
+      loadExercise(exerciseNames[0]);
       loadExercises({ name: exerciseNames[0] });
       loadExerciseFocus('volume');
     }

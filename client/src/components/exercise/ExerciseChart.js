@@ -16,20 +16,21 @@ const ExerciseChart = ({
     loading
   }}) => {
 
+  const chartAllUsers = createExerciseChart({
+    name: 'public',
+    title: 'All Users'
+  });
+  const chartUser = createExerciseChart({
+    name: 'user',
+    title: 'You'
+  });
+
   useEffect(() => {
     if (!loading) {
-      let chartAllUsers = createExerciseChart({
-        name: 'public',
-        title: 'All Users'
-      });
       chartAllUsers.draw(exercises, exerciseFocus);
 
       if (isAuthenticated) {
         let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);
-        let chartUser = createExerciseChart({
-          name: 'user',
-          title: 'You'
-        });
         chartUser.draw(exercisesUser, exerciseFocus);
       }
     }

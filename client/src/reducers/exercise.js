@@ -1,4 +1,5 @@
 import {
+  EXERCISE_FOCUS,
   EXERCISE_LIST_CLEAR,
   EXERCISE_LIST_ERROR,
   EXERCISE_LIST_LOAD,
@@ -43,6 +44,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         exercises: [],
+        loading: false
+      };
+    case EXERCISE_FOCUS:
+      return {
+        ...state,
+        exerciseFocus: payload,
         loading: false
       };
     case EXERCISE_UPLOAD_SUCCESS:

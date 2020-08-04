@@ -40,6 +40,11 @@ export const createExerciseChart = ({ name, title }) => {
     const axisY = d3.axisLeft(scaleY)
       .ticks(10, '.0f');
 
+    const tooltip = d3.select(`.ec-${name}`)
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 1);
+
     const chartSvgWrapper = d3.select(`.ec-${name}`)
       .append('div')
       .attr('class', `ec-svg-wrapper ec-svg-wrapper-${name}`);
@@ -81,6 +86,18 @@ export const createExerciseChart = ({ name, title }) => {
         .attr('cy', heightChart)
         .attr('r', pointRadius);
 
+    const tooltipShow = (html) => {
+      tooltip
+        .html(html)
+        .style('opacity', 1)
+        .style('left', `${d3.event.pageX - 20}px`)
+        .style('top', `${d3.event.pageY - 50}px`);
+    };
+
+    const tooltipHide = () => {
+      tooltip.style('opacity', 0);
+    };
+
     const drawVolume = () => {
       const recordWithMaxVolume = _.max(dataExercises, recordsByDate => {
         return _.reduce(recordsByDate, (memo, record) => (memo + record.volume), 0);
@@ -90,6 +107,11 @@ export const createExerciseChart = ({ name, title }) => {
       scaleY.domain([0, maxVolume + (maxVolume * 0.1)]);
 
       pointsEnter.merge(points)
+        .on('mouseenter', d => {
+          const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
+          tooltipShow(`${volume.toFixed()}`);
+        })
+        .on('mouseleave', d => tooltipHide())
         .transition(trans)
         .attr('cx', d => scaleX(parseDate(d)))
         .attr('cy', d => {
@@ -131,6 +153,11 @@ export const createExerciseChart = ({ name, title }) => {
       scaleY.domain([0, maxReps]);
 
       pointsEnter.merge(points)
+        .on('mouseenter', d => {
+          const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
+          tooltipShow(`${recordWithMaxReps.reps}`);
+        })
+        .on('mouseleave', d => tooltipHide())
         .transition(trans)
         .attr('cx', d => scaleX(parseDate(d)))
         .attr('cy', d => {

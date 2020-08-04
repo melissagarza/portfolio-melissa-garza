@@ -2,6 +2,24 @@
   margin-bottom: 1.5rem;
 }
 
+.tooltip {
+  color: black;
+  line-height: 1.5rem;
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: black;
+
+  .tooltip-data {
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .tooltip-date {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
 .ec {
   padding-top: 3rem;
   margin-bottom: 3rem;

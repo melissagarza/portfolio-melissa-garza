@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import _ from 'underscore';
+import moment from 'moment';
 
 export const createExerciseChart = ({ name, title }) => {
 
@@ -91,7 +92,7 @@ export const createExerciseChart = ({ name, title }) => {
         .html(html)
         .style('opacity', 1)
         .style('left', `${d3.event.pageX - 20}px`)
-        .style('top', `${d3.event.pageY - 50}px`);
+        .style('top', `${d3.event.pageY - 80}px`);
     };
 
     const tooltipHide = () => {
@@ -109,7 +110,11 @@ export const createExerciseChart = ({ name, title }) => {
       pointsEnter.merge(points)
         .on('mouseenter', d => {
           const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-          tooltipShow(`${volume.toFixed()}`);
+          tooltipShow(`
+            <span class="tooltip-data">${volume.toFixed()}</span>
+            <br>
+            <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
+          `);
         })
         .on('mouseleave', d => tooltipHide())
         .transition(trans)
@@ -155,7 +160,11 @@ export const createExerciseChart = ({ name, title }) => {
       pointsEnter.merge(points)
         .on('mouseenter', d => {
           const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
-          tooltipShow(`${recordWithMaxReps.reps}`);
+          tooltipShow(`
+            <span class="tooltip-data">${recordWithMaxReps.reps}</span>
+            <br>
+            <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
+          `);
         })
         .on('mouseleave', d => tooltipHide())
         .transition(trans)

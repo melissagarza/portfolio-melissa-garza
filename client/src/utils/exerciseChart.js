@@ -96,7 +96,10 @@ export const createExerciseChart = ({ name, title }) => {
     };
 
     const tooltipHide = () => {
-      tooltip.style('opacity', 0);
+      tooltip
+        .style('opacity', 0)
+        .style('left', '0px')
+        .style('top', '0px');
     };
 
     const drawVolume = () => {

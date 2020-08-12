@@ -14,6 +14,7 @@ export const createRoadmapChart = () => {
   };
   const widthChart = widthSvg - margin.left - margin.right;
   const heightChart = heightSvg - margin.top - margin.bottom;
+  const scaleColor = d3.scaleOrdinal(d3.schemePaired);
 
   const getDuration = (start, end) => {
     return moment.duration(moment(end).diff(moment(start)));
@@ -39,15 +40,19 @@ export const createRoadmapChart = () => {
 
     allStartEndDates = allStartEndDates.sort((a, b) => a.diff(b));
 
+    const startDate = allStartEndDates[0];
+    const endDate = allStartEndDates.slice(-1)[0];
+    const totalDuration = getDuration(startDate, endDate);
     const allEfforts = _.map(data, d => d.effort / d.manpower);
     const maxEffort = d3.max(allEfforts);
+    const scaleYMax = maxEffort * 0.5 + maxEffort;
 
     const scaleX = d3.scaleTime()
-      .domain(d3.extent(allStartEndDates))
+      .domain([startDate, endDate])
       .range([0, widthChart]);
 
     const scaleY = d3.scaleLinear()
-      .domain([0, maxEffort])
+      .domain([0, scaleYMax])
       .range([heightChart, 0]);
 
     const axisX = d3.axisBottom(scaleX);
@@ -82,26 +87,31 @@ export const createRoadmapChart = () => {
     groupAxisX.call(axisX);
     groupAxisY.call(axisY);
 
-    const groupChartEllipses = groupChart.append('g');
+    const groupChartCircles = groupChart.append('g');
 
-    const ellipses = groupChartEllipses.selectAll('rbc-ellipse')
+    const circles = groupChartCircles.selectAll('rbc-circle')
       .data(data);
 
-    ellipses.exit().remove();
+    circles.exit().remove();
 
-    const ellipsesEnter = ellipses.enter()
-      .append('ellipse')
-      .attr('class', 'rbc-ellipse')
+    const circlesEnter = circles.enter()
+      .append('circle')
+      .attr('class', 'rbc-circle')
       .attr('cx', d => {
-        const halfDur = getHalfDuration(d.start, d.end);
-        return scaleX(moment(d.start).add(halfDur));
+        const durHalf = getHalfDuration(d.start, d.end);
+        return scaleX(moment(d.start).add(durHalf));
       })
-      .attr('cy', scaleY(maxEffort / 2))
-      .attr('rx', 5)
-      .attr('ry', 5);
-
+      .attr('cy', scaleY(scaleYMax / 2))
+      .attr('r', d => {
+        const startOffset = getDuration(startDate, d.start);
+        const durHalf = getHalfDuration(d.start, d.end);
+        return scaleX(moment(d.end).subtract(startOffset).subtract(durHalf));
+      })
+      .attr('fill', (d, i) => {
+        return scaleColor(i);
+      });
   };
-  
+
   return {
     draw
   };

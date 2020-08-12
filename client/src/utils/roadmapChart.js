@@ -14,7 +14,7 @@ export const createRoadmapChart = () => {
   };
   const widthChart = widthSvg - margin.left - margin.right;
   const heightChart = heightSvg - margin.top - margin.bottom;
-  const scaleColor = d3.scaleOrdinal(d3.schemePaired);
+  const scaleColor = d3.scaleOrdinal(d3.schemeTableau10);
 
   const getDuration = (start, end) => {
     return moment.duration(moment(end).diff(moment(start)));
@@ -120,8 +120,21 @@ export const createRoadmapChart = () => {
         const durHalf = getHalfDuration(d.start, d.end);
         return scaleX(moment(d.end).subtract(startOffset).subtract(durHalf));
       })
-      .attr('fill', (d, i) => {
-        return scaleColor(i);
+      .attr('fill', (d, i) => scaleColor(i))
+      .on('mouseenter', d => {
+        groupChartCircles.append('text')
+          .attr('class', 'circle-text')
+          .attr('x', () => {
+            const durHalf = getHalfDuration(d.start, d.end);
+            return scaleX(moment(d.start).add(durHalf));
+          })
+          .attr('y', scaleY(totalDuration.asMilliseconds() / 2))
+          .text(d.label)
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle');
+      })
+      .on('mouseleave', () => {
+        groupChartCircles.selectAll('.circle-text').remove();
       });
   };
 

@@ -43,21 +43,28 @@ export const createRoadmapChart = () => {
     const startDate = allStartEndDates[0];
     const endDate = allStartEndDates.slice(-1)[0];
     const totalDuration = getDuration(startDate, endDate);
-    const allEfforts = _.map(data, d => d.effort / d.manpower);
-    const maxEffort = d3.max(allEfforts);
-    const scaleYMax = maxEffort * 0.5 + maxEffort;
 
     const scaleX = d3.scaleTime()
       .domain([startDate, endDate])
       .range([0, widthChart]);
 
     const scaleY = d3.scaleLinear()
-      .domain([0, scaleYMax])
+      .domain([0, totalDuration.asMilliseconds()])
       .range([heightChart, 0]);
 
-    const axisX = d3.axisBottom(scaleX);
+    const axisXMonths = d3.axisBottom(scaleX)
+      .tickFormat(d3.timeFormat(`%b '%y`))
+      .tickSize(30);
 
-    const axisY = d3.axisLeft(scaleY);
+    const axisXWeeks = d3.axisBottom(scaleX)
+      .tickFormat('')
+      .ticks(d3.timeWeek.every(1))
+      .tickSize(20);
+
+    const axisXDays = d3.axisBottom(scaleX)
+      .tickFormat('')
+      .ticks(d3.timeDay.every(1))
+      .tickSize(10);
 
     const chartSvgWrapper = d3.select('.rbc-main')
       .append('div')
@@ -77,15 +84,21 @@ export const createRoadmapChart = () => {
       .attr('class', 'rbc-group-chart')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    const groupAxisX = groupChart.append('g')
-      .attr('class', 'rbc-group-axis-x')
+    const groupAxisXMonths = groupChart.append('g')
+      .attr('class', 'rbc-group-axis-x-months')
       .attr('transform', `translate(0, ${heightChart})`);
 
-    const groupAxisY = groupChart.append('g')
-      .attr('class', 'rbc-group-axis-y');
+    const groupAxisXWeeks = groupChart.append('g')
+      .attr('class', 'rbc-group-axis-x-weeks')
+      .attr('transform', `translate(0, ${heightChart})`);
 
-    groupAxisX.call(axisX);
-    groupAxisY.call(axisY);
+    const groupAxisXDays = groupChart.append('g')
+      .attr('class', 'rbc-group-axis-x-days')
+      .attr('transform', `translate(0, ${heightChart})`);
+
+    groupAxisXMonths.call(axisXMonths);
+    groupAxisXWeeks.call(axisXWeeks);
+    groupAxisXDays.call(axisXDays);
 
     const groupChartCircles = groupChart.append('g');
 
@@ -101,7 +114,7 @@ export const createRoadmapChart = () => {
         const durHalf = getHalfDuration(d.start, d.end);
         return scaleX(moment(d.start).add(durHalf));
       })
-      .attr('cy', scaleY(scaleYMax / 2))
+      .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
       .attr('r', d => {
         const startOffset = getDuration(startDate, d.start);
         const durHalf = getHalfDuration(d.start, d.end);

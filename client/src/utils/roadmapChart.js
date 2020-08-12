@@ -123,8 +123,11 @@ export const createRoadmapChart = () => {
       .attr('fill', (d, i) => scaleColor(i))
       .attr('opacity', 0.9)
       .on('mouseenter', (d, i) => {
+        const dStartDate = moment(d.start).format('MMM DD YYYY');
+        const dEndDate = moment(d.end).format('MMM DD YYYY');
+
         groupChartCircles.append('text')
-          .attr('class', 'circle-text')
+          .attr('class', 'circle-hover-display circle-text')
           .attr('x', () => {
             const durHalf = getHalfDuration(d.start, d.end);
             return scaleX(moment(d.start).add(durHalf));
@@ -135,7 +138,7 @@ export const createRoadmapChart = () => {
             .attr('transform', 'translate(0, -5)');
 
         groupChartCircles.append('line')
-          .attr('class', 'circle-vertical-line')
+          .attr('class', 'circle-hover-display circle-vertical-line')
           .attr('x1', scaleX(moment(d.start)))
           .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
           .attr('x2', scaleX(moment(d.start)))
@@ -144,7 +147,7 @@ export const createRoadmapChart = () => {
           .attr('stroke-width', 1);
 
         groupChartCircles.append('line')
-          .attr('class', 'circle-vertical-line')
+          .attr('class', 'circle-hover-display circle-vertical-line')
           .attr('x1', scaleX(moment(d.end)))
           .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
           .attr('x2', scaleX(moment(d.end)))
@@ -153,7 +156,7 @@ export const createRoadmapChart = () => {
           .attr('stroke-width', 1);
 
         groupChartCircles.append('line')
-          .attr('class', 'circle-horizontal-line')
+          .attr('class', 'circle-hover-display circle-horizontal-line')
           .attr('x1', scaleX(moment(d.start)))
           .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
           .attr('x2', scaleX(moment(d.end)))
@@ -161,11 +164,24 @@ export const createRoadmapChart = () => {
           .attr('stroke', 'black')
           .attr('stroke-width', 1)
           .attr('stroke-dasharray', '10, 5');
+
+        groupChartCircles.append('text')
+          .attr('class', 'circle-hover-display circle-text-date circle-text-date-start')
+          .attr('x', scaleX(moment(d.start)))
+          .attr('y', heightChart)
+          .text(dStartDate)
+            .attr('transform', `translate(-3, -3) rotate(-90, ${scaleX(moment(d.start))}, ${heightChart})`);
+
+        groupChartCircles.append('text')
+          .attr('class', 'circle-hover-display circle-text-date circle-text-date-end')
+          .attr('x', scaleX(moment(d.end)))
+          .attr('y', heightChart)
+          .text(dEndDate)
+            .attr('dominant-baseline', 'hanging')
+            .attr('transform', `translate(1, -3) rotate(-90, ${scaleX(moment(d.end))}, ${heightChart})`);
       })
       .on('mouseleave', () => {
-        groupChartCircles.selectAll('.circle-text').remove();
-        groupChartCircles.selectAll('.circle-vertical-line').remove();
-        groupChartCircles.selectAll('.circle-horizontal-line').remove();
+        groupChartCircles.selectAll('.circle-hover-display').remove();
       });
   };
 

@@ -82,10 +82,10 @@ export const createExerciseChart = ({ name, title }) => {
 
     const pointsEnter = points.enter()
       .append('circle')
-        .attr('class', `point point-${name}`)
-        .attr('cx', d => scaleX(parseDate(d)))
-        .attr('cy', heightChart)
-        .attr('r', pointRadius);
+      .attr('class', `point point-${name}`)
+      .attr('cx', d => scaleX(parseDate(d)))
+      .attr('cy', heightChart)
+      .attr('r', pointRadius);
 
     const tooltipShow = (html) => {
       tooltip

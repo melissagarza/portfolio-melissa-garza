@@ -121,7 +121,8 @@ export const createRoadmapChart = () => {
         return scaleX(moment(d.end).subtract(startOffset).subtract(durHalf));
       })
       .attr('fill', (d, i) => scaleColor(i))
-      .on('mouseenter', d => {
+      .attr('opacity', 0.9)
+      .on('mouseenter', (d, i) => {
         groupChartCircles.append('text')
           .attr('class', 'circle-text')
           .attr('x', () => {
@@ -131,10 +132,40 @@ export const createRoadmapChart = () => {
           .attr('y', scaleY(totalDuration.asMilliseconds() / 2))
           .text(d.label)
             .attr('text-anchor', 'middle')
-            .attr('dominant-baseline', 'middle');
+            .attr('transform', 'translate(0, -5)');
+
+        groupChartCircles.append('line')
+          .attr('class', 'circle-vertical-line')
+          .attr('x1', scaleX(moment(d.start)))
+          .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
+          .attr('x2', scaleX(moment(d.start)))
+          .attr('y2', heightChart)
+          .attr('stroke', scaleColor(i))
+          .attr('stroke-width', 1);
+
+        groupChartCircles.append('line')
+          .attr('class', 'circle-vertical-line')
+          .attr('x1', scaleX(moment(d.end)))
+          .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
+          .attr('x2', scaleX(moment(d.end)))
+          .attr('y2', heightChart)
+          .attr('stroke', scaleColor(i))
+          .attr('stroke-width', 1);
+
+        groupChartCircles.append('line')
+          .attr('class', 'circle-horizontal-line')
+          .attr('x1', scaleX(moment(d.start)))
+          .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
+          .attr('x2', scaleX(moment(d.end)))
+          .attr('y2', scaleY(totalDuration.asMilliseconds() / 2))
+          .attr('stroke', 'black')
+          .attr('stroke-width', 1)
+          .attr('stroke-dasharray', '10, 5');
       })
       .on('mouseleave', () => {
         groupChartCircles.selectAll('.circle-text').remove();
+        groupChartCircles.selectAll('.circle-vertical-line').remove();
+        groupChartCircles.selectAll('.circle-horizontal-line').remove();
       });
   };
 

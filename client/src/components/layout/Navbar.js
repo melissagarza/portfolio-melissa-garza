@@ -75,8 +75,8 @@ const Navbar = ({
             <NavDropdown.Item href="/exercises">
               Exercises
             </NavDropdown.Item>
-            <NavDropdown.Item href="/">
-              Bubble Chart
+            <NavDropdown.Item href="/roadmap">
+              Roadmap
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>

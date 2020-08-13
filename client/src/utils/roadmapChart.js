@@ -179,6 +179,20 @@ export const createRoadmapChart = () => {
           .text(dEndDate)
             .attr('dominant-baseline', 'hanging')
             .attr('transform', `translate(1, -3) rotate(-90, ${scaleX(moment(d.end))}, ${heightChart})`);
+
+        groupChartCircles.append('text')
+          .attr('class', 'circle-hover-display circle-text-duration')
+          .attr('x', () => {
+            const durHalf = getHalfDuration(d.start, d.end);
+            return scaleX(moment(d.start).add(durHalf));
+          })
+          .attr('y', heightChart)
+          .text(() => {
+            const dur = getDuration(d.start, d.end);
+            return `${dur.asDays().toFixed()} days`;
+          })
+            .attr('text-anchor', 'middle')
+            .attr('transform', 'translate(0, -5)');
       })
       .on('mouseleave', () => {
         groupChartCircles.selectAll('.circle-hover-display').remove();

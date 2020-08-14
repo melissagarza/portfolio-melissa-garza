@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist';
 import alert from './alert';
 import auth from './auth';
 import exercise from './exercise';
+import roadmap from './roadmap';
 
 const persistConfigRoot = {
   key: 'root',
@@ -21,7 +22,8 @@ const persistConfigAuth = {
 const combinedReducers = combineReducers({
   alert,
   auth: persistReducer(persistConfigAuth, auth),
-  exercise
+  exercise,
+  roadmap
 });
 
 const rootReducer = persistReducer(persistConfigRoot, combinedReducers);

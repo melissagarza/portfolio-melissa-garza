@@ -1,26 +1,35 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import Loading from '../layout/Loading';
 import { createRoadmapChart } from '../../utils/roadmapChart';
 
-const RoadmapChart = () => {
+const RoadmapChart = ({ roadmap: { roadmapData, loading } }) => {
 
-  const roadmapChart = createRoadmapChart();
-  const tempData = [
-    {"label":"0.5 POC","start":"07.07.2014","end":"08.10.2014","effort":25,"manpower": 1},
-    {"label":"Toolbox 1.0","start":"08.07.2014","end":"10.07.2014","effort":44,"manpower": 1},
-    {"label":"Toolbox 1.1","start":"10.03.2014","end":"12.16.2014","effort":53,"manpower": 1},
-    {"label":"Toolbox 1.2","start":"12.13.2014","end":"01.20.2015","effort":27,"manpower": 1}
-  ];
+  const roadmapChart = useRef(null);
 
   useEffect(() => {
-    roadmapChart.draw(tempData);
-  }, [roadmapChart, tempData]);
+    if (!loading) {
+      if (roadmapChart.current === null) {
+        roadmapChart.current = createRoadmapChart();
+      }
+      roadmapChart.current.draw(roadmapData);
+    }
+  }, [loading, roadmapData]);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Fragment>
       <div className="rbc-main"></div>
     </Fragment>
   );
 };
 
-export default connect()(RoadmapChart);
+RoadmapChart.propTypes = {
+  roadmap: PropTypes.object
+};
+
+const mapStateToProps = ({ roadmap }) => ({ roadmap });
+
+export default connect(mapStateToProps, {})(RoadmapChart);

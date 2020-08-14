@@ -15,6 +15,43 @@ export const createRoadmapChart = () => {
   const widthChart = widthSvg - margin.left - margin.right;
   const heightChart = heightSvg - margin.top - margin.bottom;
   const scaleColor = d3.scaleOrdinal(d3.schemeTableau10);
+  const tr = d3.transition().duration(300).ease(d3.easeLinear);
+
+  const chartSvgWrapper = d3.select('.rbc-main')
+    .append('div')
+    .attr('class', 'rbc-svg-wrapper');
+
+  chartSvgWrapper.append('h3')
+    .attr('class', 'rbc-title')
+    .text('Roadmap Bubble Chart');
+
+  const chartSvg = chartSvgWrapper.append('svg')
+    .attr('class', 'rbc-svg')
+    .attr('xmlns', 'http://www.w3.org/2000/svg')
+    .attr('viewBox', `0 0 ${widthSvg} ${heightSvg}`)
+    .attr('preserveAspectRatio', 'none');
+
+  const groupChart = chartSvg.append('g')
+    .attr('class', 'rbc-group-chart')
+    .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+  const groupAxisXMonths = groupChart.append('g')
+    .attr('class', 'rbc-group-axis-x-months')
+    .attr('transform', `translate(0, ${heightChart})`);
+
+  const groupAxisXWeeks = groupChart.append('g')
+    .attr('class', 'rbc-group-axis-x-weeks')
+    .attr('transform', `translate(0, ${heightChart})`);
+
+  const groupAxisXDays = groupChart.append('g')
+    .attr('class', 'rbc-group-axis-x-days')
+    .attr('transform', `translate(0, ${heightChart})`);
+
+  const scaleX = d3.scaleTime()
+    .range([0, widthChart]);
+
+  const scaleY = d3.scaleLinear()
+    .range([heightChart, 0]);
 
   const getDuration = (start, end) => {
     return moment.duration(moment(end).diff(moment(start)));
@@ -44,13 +81,8 @@ export const createRoadmapChart = () => {
     const endDate = allStartEndDates.slice(-1)[0];
     const totalDuration = getDuration(startDate, endDate);
 
-    const scaleX = d3.scaleTime()
-      .domain([startDate, endDate])
-      .range([0, widthChart]);
-
-    const scaleY = d3.scaleLinear()
-      .domain([0, totalDuration.asMilliseconds()])
-      .range([heightChart, 0]);
+    scaleX.domain([startDate, endDate]);
+    scaleY.domain([0, totalDuration.asMilliseconds()]);
 
     const axisXMonths = d3.axisBottom(scaleX)
       .tickFormat(d3.timeFormat(`%b '%y`))
@@ -65,36 +97,6 @@ export const createRoadmapChart = () => {
       .tickFormat('')
       .ticks(d3.timeDay.every(1))
       .tickSize(10);
-
-    const chartSvgWrapper = d3.select('.rbc-main')
-      .append('div')
-      .attr('class', 'rbc-svg-wrapper');
-
-    chartSvgWrapper.append('h3')
-      .attr('class', 'rbc-title')
-      .text('Roadmap Bubble Chart');
-
-    const chartSvg = chartSvgWrapper.append('svg')
-      .attr('class', 'rbc-svg')
-      .attr('xmlns', 'http://www.w3.org/2000/svg')
-      .attr('viewBox', `0 0 ${widthSvg} ${heightSvg}`)
-      .attr('preserveAspectRatio', 'none');
-
-    const groupChart = chartSvg.append('g')
-      .attr('class', 'rbc-group-chart')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
-    const groupAxisXMonths = groupChart.append('g')
-      .attr('class', 'rbc-group-axis-x-months')
-      .attr('transform', `translate(0, ${heightChart})`);
-
-    const groupAxisXWeeks = groupChart.append('g')
-      .attr('class', 'rbc-group-axis-x-weeks')
-      .attr('transform', `translate(0, ${heightChart})`);
-
-    const groupAxisXDays = groupChart.append('g')
-      .attr('class', 'rbc-group-axis-x-days')
-      .attr('transform', `translate(0, ${heightChart})`);
 
     groupAxisXMonths.call(axisXMonths);
     groupAxisXWeeks.call(axisXWeeks);
@@ -115,13 +117,11 @@ export const createRoadmapChart = () => {
         return scaleX(moment(d.start).add(durHalf));
       })
       .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
-      .attr('r', d => {
-        const startOffset = getDuration(startDate, d.start);
-        const durHalf = getHalfDuration(d.start, d.end);
-        return scaleX(moment(d.end).subtract(startOffset).subtract(durHalf));
-      })
+      .attr('r', 0)
       .attr('fill', (d, i) => scaleColor(i))
-      .attr('opacity', 0.9)
+      .attr('opacity', 0.9);
+
+    circlesEnter.merge(circles)
       .on('mouseenter', (d, i) => {
         const dStartDate = moment(d.start).format('MMM DD YYYY');
         const dEndDate = moment(d.end).format('MMM DD YYYY');
@@ -179,9 +179,29 @@ export const createRoadmapChart = () => {
           .text(dEndDate)
             .attr('dominant-baseline', 'hanging')
             .attr('transform', `translate(1, -3) rotate(-90, ${scaleX(moment(d.end))}, ${heightChart})`);
+
+        groupChartCircles.append('text')
+          .attr('class', 'circle-hover-display circle-text-duration')
+          .attr('x', () => {
+            const durHalf = getHalfDuration(d.start, d.end);
+            return scaleX(moment(d.start).add(durHalf));
+          })
+          .attr('y', heightChart)
+          .text(() => {
+            const dur = getDuration(d.start, d.end);
+            return `${dur.asDays().toFixed()} days`;
+          })
+            .attr('text-anchor', 'middle')
+            .attr('transform', 'translate(0, -5)');
       })
       .on('mouseleave', () => {
         groupChartCircles.selectAll('.circle-hover-display').remove();
+      })
+      .transition(tr)
+      .attr('r', d => {
+        const startOffset = getDuration(startDate, d.start);
+        const durHalf = getHalfDuration(d.start, d.end);
+        return scaleX(moment(d.end).subtract(startOffset).subtract(durHalf));
       });
   };
 

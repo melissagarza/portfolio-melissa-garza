@@ -1,19 +1,25 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Loading from '../layout/Loading';
 import { createRoadmapChart } from '../../utils/roadmapChart';
 
 const RoadmapChart = ({ roadmap: { roadmapData, loading } }) => {
 
-  const roadmapChart = createRoadmapChart();
+  const roadmapChart = useRef(null);
 
   useEffect(() => {
     if (!loading) {
-      roadmapChart.draw(roadmapData);
+      if (roadmapChart.current === null) {
+        roadmapChart.current = createRoadmapChart();
+      }
+      roadmapChart.current.draw(roadmapData);
     }
-  }, [loading, roadmapChart, roadmapData]);
+  }, [loading, roadmapData]);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Fragment>
       <div className="rbc-main"></div>
     </Fragment>

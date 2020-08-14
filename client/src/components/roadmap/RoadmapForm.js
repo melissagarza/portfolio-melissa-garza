@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   loadRoadmapData,
   roadmapDataAdd,
+  roadmapDataEdit,
   roadmapDataRemove
 } from '../../actions/roadmap';
 import { Form } from 'react-bootstrap';
@@ -15,6 +16,7 @@ const RoadmapForm = ({
   },
   loadRoadmapData,
   roadmapDataAdd,
+  roadmapDataEdit,
   roadmapDataRemove
 }) => {
 
@@ -27,11 +29,30 @@ const RoadmapForm = ({
     ]);
   }, [loadRoadmapData]);
 
+  const onChangeDataEntry = (e, index, field) => {
+    let dataEntry = roadmapData[index];
+    dataEntry[field] = e.target.value;
+    roadmapDataEdit(index, dataEntry);
+  };
+
   return (
     <Fragment>
 
       <Form className="mb-5">
-
+        {roadmapData.map((entry, index) => (
+          <Form.Row key={index}>
+            <Form.Group>
+              <Form.Control
+                as="input"
+                defaultValue={entry.label}
+                onBlur={e => onChangeDataEntry(e, index, 'label')}
+              />
+              <span>
+                {entry.start} {entry.end} {entry.effort} {entry.manpower}
+              </span>
+            </Form.Group>
+          </Form.Row>
+        ))}
       </Form>
 
     </Fragment>
@@ -42,6 +63,7 @@ RoadmapForm.propTypes = {
   roadmapData: PropTypes.array,
   loadRoadmapData: PropTypes.func.isRequired,
   roadmapDataAdd: PropTypes.func.isRequired,
+  roadmapDataEdit: PropTypes.func.isRequired,
   roadmapDataRemove: PropTypes.func.isRequired
 };
 
@@ -50,5 +72,6 @@ const mapStateToProps = ({ roadmap }) => ({ roadmap });
 export default connect(mapStateToProps, {
   loadRoadmapData,
   roadmapDataAdd,
+  roadmapDataEdit,
   roadmapDataRemove
 })(RoadmapForm);

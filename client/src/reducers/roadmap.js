@@ -1,5 +1,6 @@
 import {
   ROADMAP_DATA_ADD,
+  ROADMAP_DATA_EDIT,
   ROADMAP_DATA_LOAD,
   ROADMAP_DATA_REMOVE
 } from '../actions/types';
@@ -11,7 +12,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   const { type, payload } = action;
-  console.log(state);
 
   switch (type) {
     case ROADMAP_DATA_LOAD:
@@ -24,6 +24,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         roadmapData: state.roadmapData.push(payload),
+        loading: false
+      };
+    case ROADMAP_DATA_EDIT:
+      const { index, dataEntry } = payload;
+      let roadmapData = state.roadmapData;
+      roadmapData[index] = dataEntry;
+
+      return {
+        ...state,
+        roadmapData,
         loading: false
       };
     case ROADMAP_DATA_REMOVE:

@@ -98,9 +98,10 @@ const ExerciseForm = ({
 };
 
 ExerciseForm.propTypes = {
-  exerciseNames: PropTypes.array,
+  exercise: PropTypes.object,
   loadExercise: PropTypes.func.isRequired,
-  loadExercises: PropTypes.func.isRequired
+  loadExercises: PropTypes.func.isRequired,
+  loadExerciseFocus: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ exercise }) => ({ exercise });

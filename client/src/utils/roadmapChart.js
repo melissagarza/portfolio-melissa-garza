@@ -35,6 +35,8 @@ export const createRoadmapChart = () => {
     .attr('class', 'rbc-group-chart')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
+  const groupChartCircles = groupChart.append('g');
+
   const groupAxisXMonths = groupChart.append('g')
     .attr('class', 'rbc-group-axis-x-months')
     .attr('transform', `translate(0, ${heightChart})`);
@@ -102,9 +104,7 @@ export const createRoadmapChart = () => {
     groupAxisXWeeks.call(axisXWeeks);
     groupAxisXDays.call(axisXDays);
 
-    const groupChartCircles = groupChart.append('g');
-
-    const circles = groupChartCircles.selectAll('rbc-circle')
+    const circles = groupChartCircles.selectAll('.rbc-circle')
       .data(data);
 
     circles.exit().remove();

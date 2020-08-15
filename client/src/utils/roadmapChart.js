@@ -198,6 +198,11 @@ export const createRoadmapChart = () => {
         groupChartCircles.selectAll('.circle-hover-display').remove();
       })
       .transition(tr)
+      .attr('cx', d => {
+        const durHalf = getHalfDuration(d.start, d.end);
+        return scaleX(moment(d.start).add(durHalf));
+      })
+      .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
       .attr('r', d => {
         const startOffset = getDuration(startDate, d.start);
         const durHalf = getHalfDuration(d.start, d.end);

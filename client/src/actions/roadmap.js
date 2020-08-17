@@ -19,10 +19,10 @@ export const roadmapDataAdd = dataEntry => dispatch => {
   });
 };
 
-export const roadmapDataEdit = (index, dataEntry) => dispatch => {
+export const roadmapDataEdit = (index, field, value) => dispatch => {
   dispatch({
     type: ROADMAP_DATA_EDIT,
-    payload: { index, dataEntry }
+    payload: { index, field, value }
   });
 };
 

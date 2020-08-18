@@ -1,17 +1,20 @@
 import React, { Fragment, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Loading from '../layout/Loading';
 import { createRoadmapChart } from '../../utils/roadmapChart';
 
-const RoadmapChart = ({ roadmap: { roadmapData, loading } }) => {
+const RoadmapChart = () => {
+
+  const { loading, roadmapData } = useSelector(state => state.roadmap);
 
   const roadmapChart = useRef(null);
+  const roadmapRoot = useRef(null);
 
   useEffect(() => {
     if (!loading) {
       if (roadmapChart.current === null) {
-        roadmapChart.current = createRoadmapChart();
+        roadmapChart.current = createRoadmapChart(roadmapRoot);
       }
       roadmapChart.current.draw(roadmapData);
     }
@@ -21,15 +24,17 @@ const RoadmapChart = ({ roadmap: { roadmapData, loading } }) => {
     <Loading />
   ) : (
     <Fragment>
-      <div className="rbc-main"></div>
+      <div
+        ref={roadmapRoot}
+        className="rbc-main"
+      ></div>
     </Fragment>
   );
 };
 
 RoadmapChart.propTypes = {
-  roadmap: PropTypes.object
+  loading: PropTypes.bool,
+  roadmapChart: PropTypes.array
 };
 
-const mapStateToProps = ({ roadmap }) => ({ roadmap });
-
-export default connect(mapStateToProps, {})(RoadmapChart);
+export default RoadmapChart;

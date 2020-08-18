@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loadRoadmapData, roadmapDataEdit } from '../../actions/roadmap';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 
 const RoadmapForm = ({ roadmap: { roadmapData }, loadRoadmapData, roadmapDataEdit }) => {
 
@@ -23,13 +23,20 @@ const RoadmapForm = ({ roadmap: { roadmapData }, loadRoadmapData, roadmapDataEdi
     let newFormData = [...formData];
     newFormData[index][field] = e.target.value;
     setFormData(newFormData);
-    loadRoadmapData(newFormData);
+  };
+  
+  const onSubmit = e => {
+    e.preventDefault();
+    loadRoadmapData([...formData]);
   };
 
   return (
     <Fragment>
 
-      <Form className="mb-5">
+      <Form
+        className="mb-5"
+        onSubmit={e => onSubmit(e)}
+      >
         {formData.map((entry, index) => (
           <Form.Row key={index}>
             <Form.Group>
@@ -66,9 +73,12 @@ const RoadmapForm = ({ roadmap: { roadmapData }, loadRoadmapData, roadmapDataEdi
                 defaultValue={entry.manpower}
                 onBlur={e => onBlur(e, index, 'manpower')}
               />
-              </Form.Group>
+            </Form.Group>
           </Form.Row>
         ))}
+        <Button type="submit">
+          Draw
+        </Button>
       </Form>
 
     </Fragment>

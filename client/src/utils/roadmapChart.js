@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import _ from 'underscore';
 import moment from 'moment';
 
-export const createRoadmapChart = () => {
+export const createRoadmapChart = rootElem => {
 
   const widthSvg = 800;
   const heightSvg = 400;
@@ -17,9 +17,11 @@ export const createRoadmapChart = () => {
   const scaleColor = d3.scaleOrdinal(d3.schemeTableau10);
   const tr = d3.transition().duration(300).ease(d3.easeLinear);
 
-  const chartSvgWrapper = d3.select('.rbc-main')
+  let rootSelector = typeof rootElem === 'string' ? rootElem : rootElem.current;
+
+  const chartSvgWrapper = d3.select(rootSelector)
     .append('div')
-    .attr('class', 'rbc-svg-wrapper');
+      .attr('class', 'rbc-svg-wrapper');
 
   chartSvgWrapper.append('h3')
     .attr('class', 'rbc-title')
@@ -111,15 +113,15 @@ export const createRoadmapChart = () => {
 
     const circlesEnter = circles.enter()
       .append('circle')
-      .attr('class', 'rbc-circle')
-      .attr('cx', d => {
-        const durHalf = getHalfDuration(d.start, d.end);
-        return scaleX(moment(d.start).add(durHalf));
-      })
-      .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
-      .attr('r', 0)
-      .attr('fill', (d, i) => scaleColor(i))
-      .attr('opacity', 0.9);
+        .attr('class', 'rbc-circle')
+        .attr('cx', d => {
+          const durHalf = getHalfDuration(d.start, d.end);
+          return scaleX(moment(d.start).add(durHalf));
+        })
+        .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
+        .attr('r', 0)
+        .attr('fill', (d, i) => scaleColor(i))
+        .attr('opacity', 0.9);
 
     circlesEnter.merge(circles)
       .on('mouseenter', (d, i) => {

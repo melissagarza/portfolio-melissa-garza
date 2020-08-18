@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import _ from 'underscore';
 import moment from 'moment';
 
-export const createRoadmapChart = () => {
+export const createRoadmapChart = rootElem => {
 
   const widthSvg = 800;
   const heightSvg = 400;
@@ -17,9 +17,11 @@ export const createRoadmapChart = () => {
   const scaleColor = d3.scaleOrdinal(d3.schemeTableau10);
   const tr = d3.transition().duration(300).ease(d3.easeLinear);
 
-  const chartSvgWrapper = d3.select('.rbc-main')
+  let rootSelector = typeof rootElem === 'string' ? rootElem : rootElem.current;
+
+  const chartSvgWrapper = d3.select(rootSelector)
     .append('div')
-    .attr('class', 'rbc-svg-wrapper');
+      .attr('class', 'rbc-svg-wrapper');
 
   chartSvgWrapper.append('h3')
     .attr('class', 'rbc-title')
@@ -34,6 +36,8 @@ export const createRoadmapChart = () => {
   const groupChart = chartSvg.append('g')
     .attr('class', 'rbc-group-chart')
     .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+  const groupChartCircles = groupChart.append('g');
 
   const groupAxisXMonths = groupChart.append('g')
     .attr('class', 'rbc-group-axis-x-months')
@@ -102,24 +106,22 @@ export const createRoadmapChart = () => {
     groupAxisXWeeks.call(axisXWeeks);
     groupAxisXDays.call(axisXDays);
 
-    const groupChartCircles = groupChart.append('g');
-
-    const circles = groupChartCircles.selectAll('rbc-circle')
+    const circles = groupChartCircles.selectAll('.rbc-circle')
       .data(data);
 
     circles.exit().remove();
 
     const circlesEnter = circles.enter()
       .append('circle')
-      .attr('class', 'rbc-circle')
-      .attr('cx', d => {
-        const durHalf = getHalfDuration(d.start, d.end);
-        return scaleX(moment(d.start).add(durHalf));
-      })
-      .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
-      .attr('r', 0)
-      .attr('fill', (d, i) => scaleColor(i))
-      .attr('opacity', 0.9);
+        .attr('class', 'rbc-circle')
+        .attr('cx', d => {
+          const durHalf = getHalfDuration(d.start, d.end);
+          return scaleX(moment(d.start).add(durHalf));
+        })
+        .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
+        .attr('r', 0)
+        .attr('fill', (d, i) => scaleColor(i))
+        .attr('opacity', 0.9);
 
     circlesEnter.merge(circles)
       .on('mouseenter', (d, i) => {
@@ -198,6 +200,11 @@ export const createRoadmapChart = () => {
         groupChartCircles.selectAll('.circle-hover-display').remove();
       })
       .transition(tr)
+      .attr('cx', d => {
+        const durHalf = getHalfDuration(d.start, d.end);
+        return scaleX(moment(d.start).add(durHalf));
+      })
+      .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
       .attr('r', d => {
         const startOffset = getDuration(startDate, d.start);
         const durHalf = getHalfDuration(d.start, d.end);

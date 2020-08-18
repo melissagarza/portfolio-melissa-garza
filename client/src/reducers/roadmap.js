@@ -27,9 +27,9 @@ export default (state = initialState, action) => {
         loading: false
       };
     case ROADMAP_DATA_EDIT:
-      const { index, dataEntry } = payload;
+      const { index, field, value } = payload;
       let roadmapData = state.roadmapData;
-      roadmapData[index] = dataEntry;
+      roadmapData[index][field] = value;
 
       return {
         ...state,

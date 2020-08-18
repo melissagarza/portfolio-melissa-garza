@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 import Loading from '../layout/Loading';
 import { createRoadmapChart } from '../../utils/roadmapChart';
 
@@ -30,11 +29,6 @@ const RoadmapChart = () => {
       ></div>
     </Fragment>
   );
-};
-
-RoadmapChart.propTypes = {
-  loading: PropTypes.bool,
-  roadmapChart: PropTypes.array
 };
 
 export default RoadmapChart;

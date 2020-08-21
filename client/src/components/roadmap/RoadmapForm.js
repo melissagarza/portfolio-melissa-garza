@@ -77,17 +77,19 @@ const RoadmapForm = () => {
             </Form.Group>
             <Form.Group>
               <DatePicker
+                className="form-control"
                 selected={new Date(entry.start)}
                 onChange={date => onChangeDate(date, index, 'start')}
               />
             </Form.Group>
             <Form.Group>
               <DatePicker
+                className="form-control"
                 selected={new Date(entry.end)}
                 onChange={date => onChangeDate(date, index, 'end')}
               />
             </Form.Group>
-            <Form.Group>
+            {/* <Form.Group>
               <Form.Control
                 as="input"
                 value={entry.effort}
@@ -100,7 +102,7 @@ const RoadmapForm = () => {
                 value={entry.manpower}
                 onChange={e => onChangeText(e, index, 'manpower')}
               />
-            </Form.Group>
+            </Form.Group> */}
           </Form.Row>
         ))}
         <Button type="submit">

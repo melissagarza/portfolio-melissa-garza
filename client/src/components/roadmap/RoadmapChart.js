@@ -7,8 +7,8 @@ const RoadmapChart = () => {
 
   const { loading, roadmapData } = useSelector(state => state.roadmap);
 
-  const roadmapChart = useRef(null);
   const roadmapRoot = useRef(null);
+  const roadmapChart = useRef(null);
 
   useEffect(() => {
     if (!loading) {

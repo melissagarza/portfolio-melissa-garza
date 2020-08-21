@@ -124,7 +124,7 @@ export const createRoadmapChart = rootElem => {
       .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
       .attr('r', 0)
       .attr('fill', (d, i) => scaleColor(i))
-      .attr('opacity', 0.9)
+      .attr('opacity', 0.75)
       .on('mouseenter', (d, i, nodes) => {
         d3.select(nodes[i].parentElement).selectAll('.rbc-datapoint-hover')
           .attr('opacity', 1);
@@ -147,7 +147,7 @@ export const createRoadmapChart = rootElem => {
         .attr('transform', 'translate(0, -5)');
 
     dataPointsEnter.append('line')
-      .attr('class', 'rbc-datapoint-hover rbc-datapoint-vertical-line')
+      .attr('class', 'rbc-datapoint-hover rbc-datapoint-vertical-line-start')
       .attr('opacity', 0)
       .attr('x1', d => scaleX(moment(d.start)))
       .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
@@ -157,7 +157,7 @@ export const createRoadmapChart = rootElem => {
       .attr('stroke-width', 1);
 
     dataPointsEnter.append('line')
-      .attr('class', 'rbc-datapoint-hover rbc-datapoint-vertical-line')
+      .attr('class', 'rbc-datapoint-hover rbc-datapoint-vertical-line-end')
       .attr('opacity', 0)
       .attr('x1', d => scaleX(moment(d.end)))
       .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
@@ -229,7 +229,53 @@ export const createRoadmapChart = rootElem => {
         });
 
     dataPointsMerged.select('.rbc-datapoint-text')
+      .attr('x', d => {
+        const durHalf = getHalfDuration(d.start, d.end);
+        return scaleX(moment(d.start).add(durHalf));
+      })
+      .attr('y', scaleY(totalDuration.asMilliseconds() / 2))
       .text(d => d.label);
+
+    dataPointsMerged.select('.rbc-datapoint-vertical-line-start')
+      .attr('x1', d => scaleX(moment(d.start)))
+      .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
+      .attr('x2', d => scaleX(moment(d.start)));
+
+    dataPointsMerged.select('.rbc-datapoint-vertical-line-end')
+      .attr('x1', d => scaleX(moment(d.end)))
+      .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
+      .attr('x2', d => scaleX(moment(d.end)));
+
+    dataPointsMerged.select('.rbc-datapoint-horizontal-line')
+      .attr('x1', d => scaleX(moment(d.start)))
+      .attr('y1', scaleY(totalDuration.asMilliseconds() / 2))
+      .attr('x2', d => scaleX(moment(d.end)))
+      .attr('y2', scaleY(totalDuration.asMilliseconds() / 2));
+
+    dataPointsMerged.select('.rbc-datapoint-date-start')
+      .attr('x', d => scaleX(moment(d.start)))
+      .text(d => moment(d.start).format('MMM DD YYYY'))
+        .attr('transform', d => {
+          return `translate(-3, -3) rotate(-90, ${scaleX(moment(d.start))}, ${heightChart})`;
+        });
+
+    dataPointsMerged.select('.rbc-datapoint-date-end')
+      .attr('x', d => scaleX(moment(d.end)))
+      .text(d => moment(d.end).format('MMM DD YYYY'))
+        .attr('dominant-baseline', 'hanging')
+        .attr('transform', d => {
+          return `translate(1, -3) rotate(-90, ${scaleX(moment(d.end))}, ${heightChart})`;
+        });
+
+    dataPointsMerged.select('.rbc-datapoint-duration')
+      .attr('x', d => {
+        const durHalf = getHalfDuration(d.start, d.end);
+        return scaleX(moment(d.start).add(durHalf));
+      })
+      .text(d => {
+        const dur = getDuration(d.start, d.end);
+        return `${dur.asDays().toFixed()} days`;
+      });
   };
 
   return {

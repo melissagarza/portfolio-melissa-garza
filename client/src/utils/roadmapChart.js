@@ -113,15 +113,7 @@ export const createRoadmapChart = rootElem => {
 
     const dataPointsEnter = dataPoints.enter()
       .append('g')
-        .attr('class', 'rbc-datapoint')
-        .on('mouseenter', (d, i, nodes) => {
-          d3.select(nodes[i]).selectAll('.rbc-datapoint-hover')
-            .attr('opacity', 1);
-        })
-        .on('mouseleave', (d, i, nodes) => {
-          d3.select(nodes[i]).selectAll('.rbc-datapoint-hover')
-            .attr('opacity', 0);
-        });
+        .attr('class', 'rbc-datapoint');
 
     dataPointsEnter.append('circle')
       .attr('class', 'rbc-datapoint-circle')
@@ -132,7 +124,15 @@ export const createRoadmapChart = rootElem => {
       .attr('cy', scaleY(totalDuration.asMilliseconds() / 2))
       .attr('r', 0)
       .attr('fill', (d, i) => scaleColor(i))
-      .attr('opacity', 0.9);
+      .attr('opacity', 0.9)
+      .on('mouseenter', (d, i, nodes) => {
+        d3.select(nodes[i].parentElement).selectAll('.rbc-datapoint-hover')
+          .attr('opacity', 1);
+      })
+      .on('mouseleave', (d, i, nodes) => {
+        d3.select(nodes[i].parentElement).selectAll('.rbc-datapoint-hover')
+          .attr('opacity', 0);
+      });
 
     dataPointsEnter.append('text')
       .attr('class', 'rbc-datapoint-hover rbc-datapoint-text')

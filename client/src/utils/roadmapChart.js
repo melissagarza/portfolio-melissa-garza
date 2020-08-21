@@ -5,7 +5,7 @@ import moment from 'moment';
 export const createRoadmapChart = rootElem => {
 
   const widthSvg = 800;
-  const heightSvg = 400;
+  const heightSvg = 600;
   const margin = {
     top: 25,
     right: 25,

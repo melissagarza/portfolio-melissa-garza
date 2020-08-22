@@ -4,6 +4,8 @@ import { loadRoadmapData } from '../../actions/roadmap';
 import { Form, Button, Col } from 'react-bootstrap';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const RoadmapForm = () => {
 
@@ -130,7 +132,7 @@ const RoadmapForm = () => {
                 variant="danger"
                 onClick={() => onClickDelete(index)}
               >
-                Delete
+                <FontAwesomeIcon icon={faTrash} />
               </Button>
             </Form.Group>
           </Form.Row>
@@ -163,7 +165,7 @@ const RoadmapForm = () => {
               variant="secondary"
               onClick={() => addNewEntry()}
             >
-              Add
+              <FontAwesomeIcon icon={faPlus} />
             </Button>
           </Form.Group>
         </Form.Row>

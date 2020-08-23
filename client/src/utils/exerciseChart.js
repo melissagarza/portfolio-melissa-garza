@@ -58,6 +58,105 @@ export const createExerciseChart = (rootElem, name, title) => {
   const axisY = d3.axisLeft(scaleY)
     .ticks(10, '.0f');
 
+  const drawVolume = (dataExercises, dates, pointsMerged) => {
+    const recordWithMaxVolume = _.max(dataExercises, recordsByDate => {
+      return _.reduce(recordsByDate, (memo, record) => (memo + record.volume), 0);
+    });
+    const maxVolume = _.reduce(recordWithMaxVolume, (memo, record) => (memo + record.volume), 0);
+
+    scaleY.domain([0, maxVolume + (maxVolume * 0.1)]);
+
+    pointsMerged
+      // .on('mouseenter', d => {
+      //   const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
+      //   tooltipShow(`
+      //     <span class="tooltip-data">${volume.toFixed()}</span>
+      //     <br>
+      //     <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
+      //   `);
+      // })
+      // .on('mouseleave', d => tooltipHide())
+      .transition(trans)
+      .attr('cx', d => scaleX(parseDate(d)))
+      .attr('cy', d => {
+        const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
+        return scaleY(volume);
+      });
+
+    const generatorArea = (d, triggerAnim) => {
+      return (
+        d3.area()
+          .x(d => scaleX(parseDate(d)))
+          .y(heightChart)
+          .y1(d => {
+            if (!triggerAnim) return heightChart;
+
+            const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
+            return scaleY(volume);
+          })
+      )(d);
+    };
+
+    groupChartArea.append('path')
+      .attr('class', `area area-${name}`)
+      .attr('d', generatorArea(dates, false))
+      .transition(trans)
+      .attr('d', generatorArea(dates, true));
+
+    groupAxisX.transition(trans).call(axisX);
+    groupAxisY.transition(trans).call(axisY);
+  };
+
+  const drawReps = (dataExercises, dates, pointsMerged) => {
+    const recordWithMaxReps = _.max(dataExercises, recordsByDate => {
+      const maxRepsOnDate = _.max(recordsByDate, record => record.reps);
+      return maxRepsOnDate.reps;
+    });
+    const maxReps = _.max(recordWithMaxReps, record => record.reps).reps;
+
+    scaleY.domain([0, maxReps]);
+
+    pointsMerged
+      // .on('mouseenter', d => {
+      //   const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
+      //   tooltipShow(`
+      //     <span class="tooltip-data">${recordWithMaxReps.reps}</span>
+      //     <br>
+      //     <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
+      //   `);
+      // })
+      // .on('mouseleave', d => tooltipHide())
+      .transition(trans)
+      .attr('cx', d => scaleX(parseDate(d)))
+      .attr('cy', d => {
+        const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
+        return scaleY(recordWithMaxReps.reps);
+      });
+
+    const generatorArea = (d, triggerAnim) => {
+      return (
+        d3.area()
+          .x(d => scaleX(parseDate(d)))
+          .y(heightChart)
+          .y1(d => {
+            if (!triggerAnim) return heightChart;
+
+            const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
+            return scaleY(recordWithMaxReps.reps);
+          })
+      )(d);
+    };
+
+    groupChartArea.append('path')
+      .attr('class', `area area-${name}`)
+      .attr('d', generatorArea(dates, false))
+      .transition(trans)
+      .attr('d', generatorArea(dates, true));
+
+    groupAxisX.transition(trans).call(axisX);
+    groupAxisY.transition(trans).call(axisY);
+  };
+
   const draw = (exercises = [], focus = 'volume') => {
 
     if (exercises.length <= 0) {
@@ -90,6 +189,8 @@ export const createExerciseChart = (rootElem, name, title) => {
       .attr('cy', heightChart)
       .attr('r', pointRadius);
 
+    const pointsMerged = points.merge(pointsEnter);
+
     // const tooltipShow = (html) => {
     //   tooltip
     //     .html(html)
@@ -105,112 +206,13 @@ export const createExerciseChart = (rootElem, name, title) => {
     //     .style('top', '0px');
     // };
 
-    const drawVolume = () => {
-      const recordWithMaxVolume = _.max(dataExercises, recordsByDate => {
-        return _.reduce(recordsByDate, (memo, record) => (memo + record.volume), 0);
-      });
-      const maxVolume = _.reduce(recordWithMaxVolume, (memo, record) => (memo + record.volume), 0);
-
-      scaleY.domain([0, maxVolume + (maxVolume * 0.1)]);
-
-      pointsEnter.merge(points)
-        // .on('mouseenter', d => {
-        //   const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-        //   tooltipShow(`
-        //     <span class="tooltip-data">${volume.toFixed()}</span>
-        //     <br>
-        //     <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
-        //   `);
-        // })
-        // .on('mouseleave', d => tooltipHide())
-        .transition(trans)
-        .attr('cx', d => scaleX(parseDate(d)))
-        .attr('cy', d => {
-          const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-          return scaleY(volume);
-        });
-
-      const generatorArea = (d, triggerAnim) => {
-        return (
-          d3.area()
-            .x(d => scaleX(parseDate(d)))
-            .y(heightChart)
-            .y1(d => {
-              if (!triggerAnim) return heightChart;
-
-              const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-              return scaleY(volume);
-            })
-        )(d);
-      };
-
-      groupChartArea.append('path')
-        .attr('class', `area area-${name}`)
-        .attr('d', generatorArea(dates, false))
-        .transition(trans)
-        .attr('d', generatorArea(dates, true));
-
-      groupAxisX.transition(trans).call(axisX);
-      groupAxisY.transition(trans).call(axisY);
-    };
-
-    const drawReps = () => {
-      const recordWithMaxReps = _.max(dataExercises, recordsByDate => {
-        const maxRepsOnDate = _.max(recordsByDate, record => record.reps);
-        return maxRepsOnDate.reps;
-      });
-      const maxReps = _.max(recordWithMaxReps, record => record.reps).reps;
-
-      scaleY.domain([0, maxReps]);
-
-      pointsEnter.merge(points)
-        // .on('mouseenter', d => {
-        //   const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
-        //   tooltipShow(`
-        //     <span class="tooltip-data">${recordWithMaxReps.reps}</span>
-        //     <br>
-        //     <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
-        //   `);
-        // })
-        // .on('mouseleave', d => tooltipHide())
-        .transition(trans)
-        .attr('cx', d => scaleX(parseDate(d)))
-        .attr('cy', d => {
-          const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
-          return scaleY(recordWithMaxReps.reps);
-        });
-
-      const generatorArea = (d, triggerAnim) => {
-        return (
-          d3.area()
-            .x(d => scaleX(parseDate(d)))
-            .y(heightChart)
-            .y1(d => {
-              if (!triggerAnim) return heightChart;
-
-              const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
-              return scaleY(recordWithMaxReps.reps);
-            })
-        )(d);
-      };
-
-      groupChartArea.append('path')
-        .attr('class', `area area-${name}`)
-        .attr('d', generatorArea(dates, false))
-        .transition(trans)
-        .attr('d', generatorArea(dates, true));
-
-      groupAxisX.transition(trans).call(axisX);
-      groupAxisY.transition(trans).call(axisY);
-    };
-
     switch (focus) {
       case 'reps':
-        drawReps();
+        drawReps(dataExercises, dates, pointsMerged);
         break;
       case 'volume':
       default:
-        drawVolume();
+        drawVolume(dataExercises, dates, pointsMerged);
     }
   };
 

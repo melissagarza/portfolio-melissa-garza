@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import _ from 'underscore';
-import moment from 'moment';
 
 export const createExerciseChart = (rootElem, name, title) => {
 
@@ -67,15 +66,6 @@ export const createExerciseChart = (rootElem, name, title) => {
     scaleY.domain([0, maxVolume + (maxVolume * 0.1)]);
 
     pointsMerged
-      // .on('mouseenter', d => {
-      //   const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
-      //   tooltipShow(`
-      //     <span class="tooltip-data">${volume.toFixed()}</span>
-      //     <br>
-      //     <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
-      //   `);
-      // })
-      // .on('mouseleave', d => tooltipHide())
       .transition(trans)
       .attr('cx', d => scaleX(parseDate(d)))
       .attr('cy', d => {
@@ -117,15 +107,6 @@ export const createExerciseChart = (rootElem, name, title) => {
     scaleY.domain([0, maxReps]);
 
     pointsMerged
-      // .on('mouseenter', d => {
-      //   const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
-      //   tooltipShow(`
-      //     <span class="tooltip-data">${recordWithMaxReps.reps}</span>
-      //     <br>
-      //     <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
-      //   `);
-      // })
-      // .on('mouseleave', d => tooltipHide())
       .transition(trans)
       .attr('cx', d => scaleX(parseDate(d)))
       .attr('cy', d => {
@@ -163,7 +144,7 @@ export const createExerciseChart = (rootElem, name, title) => {
       return;
     }
 
-    chartSvgWrapper.append('h3')
+    chartSvgWrapper.append('h3').lower()
       .attr('class', `ec-title ec-title-${name}`)
       .text(`${exercises[0].name} ${focus[0].toUpperCase() + focus.slice(1)} for ${title}`);
 
@@ -171,11 +152,6 @@ export const createExerciseChart = (rootElem, name, title) => {
     const dates = _.keys(dataExercises).sort();
 
     scaleX.domain(d3.extent(dates, date => parseDate(date)));
-
-    // const tooltip = d3.select(`.ec-${name}`)
-    //   .append('div')
-    //   .attr('class', 'tooltip')
-    //   .style('opacity', 1);
 
     const points = groupChartPoints.selectAll(`point-${name}`)
       .data(dates);
@@ -190,21 +166,6 @@ export const createExerciseChart = (rootElem, name, title) => {
       .attr('r', pointRadius);
 
     const pointsMerged = points.merge(pointsEnter);
-
-    // const tooltipShow = (html) => {
-    //   tooltip
-    //     .html(html)
-    //     .style('opacity', 1)
-    //     .style('left', `${d3.event.pageX - 20}px`)
-    //     .style('top', `${d3.event.pageY - 80}px`);
-    // };
-
-    // const tooltipHide = () => {
-    //   tooltip
-    //     .style('opacity', 0)
-    //     .style('left', '0px')
-    //     .style('top', '0px');
-    // };
 
     switch (focus) {
       case 'reps':

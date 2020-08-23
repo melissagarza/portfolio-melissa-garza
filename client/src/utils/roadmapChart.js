@@ -17,7 +17,7 @@ export const createRoadmapChart = rootElem => {
   const scaleColor = d3.scaleOrdinal(d3.schemeTableau10);
   const tr = d3.transition().duration(300).ease(d3.easeLinear);
 
-  let rootSelector = typeof rootElem === 'string' ? rootElem : rootElem.current;
+  const rootSelector = typeof rootElem === 'string' ? rootElem : rootElem.current;
 
   const chartSvgWrapper = d3.select(rootSelector)
     .append('div')
@@ -57,6 +57,20 @@ export const createRoadmapChart = rootElem => {
   const scaleY = d3.scaleLinear()
     .range([heightChart, 0]);
 
+  const axisXMonths = d3.axisBottom(scaleX)
+    .tickFormat(d3.timeFormat(`%b '%y`))
+    .tickSize(30);
+
+  const axisXWeeks = d3.axisBottom(scaleX)
+    .tickFormat('')
+    .ticks(d3.timeWeek.every(1))
+    .tickSize(20);
+
+  const axisXDays = d3.axisBottom(scaleX)
+    .tickFormat('')
+    .ticks(d3.timeDay.every(1))
+    .tickSize(10);
+
   const getDuration = (start, end) => {
     return moment.duration(moment(end).diff(moment(start)));
   };
@@ -87,20 +101,6 @@ export const createRoadmapChart = rootElem => {
 
     scaleX.domain([startDate, endDate]);
     scaleY.domain([0, totalDuration.asMilliseconds()]);
-
-    const axisXMonths = d3.axisBottom(scaleX)
-      .tickFormat(d3.timeFormat(`%b '%y`))
-      .tickSize(30);
-
-    const axisXWeeks = d3.axisBottom(scaleX)
-      .tickFormat('')
-      .ticks(d3.timeWeek.every(1))
-      .tickSize(20);
-
-    const axisXDays = d3.axisBottom(scaleX)
-      .tickFormat('')
-      .ticks(d3.timeDay.every(1))
-      .tickSize(10);
 
     groupAxisXMonths.call(axisXMonths);
     groupAxisXWeeks.call(axisXWeeks);

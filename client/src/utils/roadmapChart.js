@@ -19,9 +19,8 @@ export const createRoadmapChart = rootElem => {
 
   const rootSelector = typeof rootElem === 'string' ? rootElem : rootElem.current;
 
-  const chartSvgWrapper = d3.select(rootSelector)
-    .append('div')
-      .attr('class', 'rbc-svg-wrapper');
+  const chartSvgWrapper = d3.select(rootSelector).append('div')
+    .attr('class', 'rbc-svg-wrapper');
 
   chartSvgWrapper.append('h3')
     .attr('class', 'rbc-title')
@@ -111,9 +110,8 @@ export const createRoadmapChart = rootElem => {
 
     dataPoints.exit().remove();
 
-    const dataPointsEnter = dataPoints.enter()
-      .append('g')
-        .attr('class', 'rbc-datapoint');
+    const dataPointsEnter = dataPoints.enter().append('g')
+      .attr('class', 'rbc-datapoint');
 
     dataPointsEnter.append('circle')
       .attr('class', 'rbc-datapoint-circle')

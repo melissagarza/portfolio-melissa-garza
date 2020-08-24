@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import _ from 'underscore';
+import moment from 'moment';
 
 export const createExerciseChart = (rootElem, name, title) => {
 
@@ -13,14 +14,18 @@ export const createExerciseChart = (rootElem, name, title) => {
   };
   const widthChart = widthSvg - margin.left - margin.right;
   const heightChart = heightSvg - margin.top - margin.bottom;
-  const pointRadius = 4;
+  const pointRadius = 5;
   const parseDate = d3.utcParse('%Y-%m-%dT%H:%M:%S.%LZ');
   const trans = d3.transition().duration(500);
 
   const rootSelector = typeof rootElem === 'string' ? rootElem : rootElem.current;
 
-  const chartSvgWrapper = d3.select(rootSelector)
-    .append('div')
+  const tooltip = d3.select(`.ec-${name}`).append('div')
+    .attr('class', 'ec-datapoint-tooltip')
+    .style('position', 'absolute')
+    .style('opacity', 0);
+
+  const chartSvgWrapper = d3.select(rootSelector).append('div')
     .attr('class', `ec-svg-wrapper ec-svg-wrapper-${name}`);
 
   const chartSvg = chartSvgWrapper.append('svg')
@@ -57,7 +62,22 @@ export const createExerciseChart = (rootElem, name, title) => {
   const axisY = d3.axisLeft(scaleY)
     .ticks(10, '.0f');
 
-  const drawVolume = (dataExercises, dates, pointsMerged) => {
+  const tooltipShow = (html) => {
+    tooltip
+      .html(html)
+      .style('opacity', 1)
+      .style('left', `${d3.event.x - 70}px`)
+      .style('top', `${d3.event.y - 80}px`);
+  };
+
+  const tooltipHide = () => {
+    tooltip
+      .style('opacity', 0)
+      .style('left', '0px')
+      .style('top', '0px');
+  };
+
+  const drawVolume = (dataExercises, dates, dataPointsMerged) => {
     const recordWithMaxVolume = _.max(dataExercises, recordsByDate => {
       return _.reduce(recordsByDate, (memo, record) => (memo + record.volume), 0);
     });
@@ -65,7 +85,16 @@ export const createExerciseChart = (rootElem, name, title) => {
 
     scaleY.domain([0, maxVolume + (maxVolume * 0.1)]);
 
-    pointsMerged
+    dataPointsMerged.select(`.ec-datapoint-circle-${name}`)
+      .on('mouseenter', d => {
+        const volume = _.reduce(dataExercises[d], (memo, record) => (memo + record.volume), 0);
+        tooltipShow(`
+          <span class="tooltip-data">${volume.toFixed()}</span>
+          <br>
+          <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
+        `);
+      })
+      .on('mouseleave', tooltipHide)
       .transition(trans)
       .attr('cx', d => scaleX(parseDate(d)))
       .attr('cy', d => {
@@ -97,7 +126,7 @@ export const createExerciseChart = (rootElem, name, title) => {
     groupAxisY.transition(trans).call(axisY);
   };
 
-  const drawReps = (dataExercises, dates, pointsMerged) => {
+  const drawReps = (dataExercises, dates, dataPointsMerged) => {
     const recordWithMaxReps = _.max(dataExercises, recordsByDate => {
       const maxRepsOnDate = _.max(recordsByDate, record => record.reps);
       return maxRepsOnDate.reps;
@@ -106,7 +135,16 @@ export const createExerciseChart = (rootElem, name, title) => {
 
     scaleY.domain([0, maxReps]);
 
-    pointsMerged
+    dataPointsMerged.select(`.ec-datapoint-circle-${name}`)
+      .on('mouseenter', d => {
+        const recordWithMaxReps = _.max(dataExercises[d], record => record.reps);
+        tooltipShow(`
+          <span class="tooltip-data">${recordWithMaxReps.reps}</span>
+          <br>
+          <span class="tooltip-date">${moment(d).format('MMM DD YYYY')}</span>
+        `);
+      })
+      .on('mouseleave', tooltipHide)
       .transition(trans)
       .attr('cx', d => scaleX(parseDate(d)))
       .attr('cy', d => {
@@ -153,27 +191,29 @@ export const createExerciseChart = (rootElem, name, title) => {
 
     scaleX.domain(d3.extent(dates, date => parseDate(date)));
 
-    const points = groupChartPoints.selectAll(`point-${name}`)
+    const dataPoints = groupChartPoints.selectAll('.ec-datapoint')
       .data(dates);
 
-    points.exit().remove();
+    dataPoints.exit().remove();
 
-    const pointsEnter = points.enter()
-      .append('circle')
-      .attr('class', `point point-${name}`)
+    const dataPointsEnter = dataPoints.enter().append('g')
+      .attr('class', 'ec-datapoint');
+
+    dataPointsEnter.append('circle')
+      .attr('class', `ec-datapoint-circle ec-datapoint-circle-${name}`)
       .attr('cx', d => scaleX(parseDate(d)))
       .attr('cy', heightChart)
       .attr('r', pointRadius);
 
-    const pointsMerged = points.merge(pointsEnter);
+    const dataPointsMerged = dataPoints.merge(dataPointsEnter);
 
     switch (focus) {
       case 'reps':
-        drawReps(dataExercises, dates, pointsMerged);
+        drawReps(dataExercises, dates, dataPointsMerged);
         break;
       case 'volume':
       default:
-        drawVolume(dataExercises, dates, pointsMerged);
+        drawVolume(dataExercises, dates, dataPointsMerged);
     }
   };
 

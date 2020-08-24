@@ -1,65 +1,54 @@
-import React, { Fragment, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { Fragment, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Loading from '../layout/Loading';
 import { createExerciseChart } from '../../utils/exerciseChart';
 
-const ExerciseChart = ({
-  auth: {
-    isAuthenticated,
-    user
-  },
-  exercise: {
-    exercise,
-    exercises,
-    exerciseFocus,
-    loading
-  }}) => {
+const ExerciseChart = () => {
 
-  const chartAllUsers = createExerciseChart({
-    name: 'public',
-    title: 'All Users'
-  });
-  const chartUser = createExerciseChart({
-    name: 'user',
-    title: 'You'
-  });
+  const chartAllUsersRoot = useRef(null);
+  const chartAllUsers = useRef(null);
+  const chartUserRoot = useRef(null);
+  const chartUser = useRef(null);
+
+  const { isAuthenticated, user } = useSelector(state => state.auth);
+  const {
+    loading,
+    exercises,
+    exerciseFocus
+  } = useSelector(state => state.exercise);
 
   useEffect(() => {
     if (!loading) {
-      chartAllUsers.draw(exercises, exerciseFocus);
-
+      if (chartAllUsers.current === null) {
+        chartAllUsers.current = createExerciseChart(
+          chartAllUsersRoot,
+          'public',
+          'All Users'
+        );
+      }
+      chartAllUsers.current.draw(exercises, exerciseFocus);
       if (isAuthenticated) {
+        if (chartUser.current === null) {
+          chartUser.current = createExerciseChart(
+            chartUserRoot,
+            'user',
+            'You'
+          );
+        }
         let exercisesUser = exercises.filter(exercise => exercise.user.alias === user.alias);
-        chartUser.draw(exercisesUser, exerciseFocus);
+        chartUser.current.draw(exercisesUser, exerciseFocus);
       }
     }
-  }, [
-    loading,
-    chartAllUsers,
-    chartUser,
-    exercises,
-    exerciseFocus,
-    isAuthenticated,
-    user
-  ]);
+  }, [loading, isAuthenticated, exercises, exerciseFocus, user]);
 
   return loading ? (
     <Loading />
   ) : (
     <Fragment>
-      {isAuthenticated && (<div className="ec ec-user"></div>)}
-      <div className="ec ec-public"></div>
+      {isAuthenticated && (<div ref={chartUserRoot} className="ec ec-user"></div>)}
+      <div ref={chartAllUsersRoot} className="ec ec-public"></div>
     </Fragment>
   );
 };
 
-ExerciseChart.propTypes = {
-  auth: PropTypes.object.isRequired,
-  exercise: PropTypes.object,
-  exercises: PropTypes.object
-};
-
-const mapStateToProps = ({ auth, exercise }) => ({ auth, exercise });
-
-export default connect(mapStateToProps, {})(ExerciseChart);
+export default ExerciseChart;

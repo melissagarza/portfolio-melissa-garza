@@ -1,11 +1,10 @@
 import React, { Fragment, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   loadExercise,
   loadExercises,
   loadExerciseFocus
 } from '../../actions/exercise';
-import { connect } from 'react-redux';
 import {
   Form,
   ButtonGroup,
@@ -13,44 +12,35 @@ import {
   Col
 } from 'react-bootstrap';
 
-const ExerciseForm = ({
-  exercise: {
-    exercise,
-    exerciseFocus,
-    exerciseNames,
-    loading
-  },
-  loadExercise,
-  loadExercises,
-  loadExerciseFocus
-}) => {
+const ExerciseForm = () => {
+
+  const dispatch = useDispatch();
+
+  const {
+    loading,
+    exercise, 
+    exerciseNames
+  } = useSelector(state => state.exercise);
 
   useEffect(() => {
     if (!loading && exercise === '' && exerciseNames && exerciseNames.length > 0) {
-      loadExercise(exerciseNames[0]);
-      loadExercises({ name: exerciseNames[0] });
-      loadExerciseFocus('volume');
+      dispatch(loadExercise(exerciseNames[0]));
+      dispatch(loadExercises({ name: exerciseNames[0] }));
+      dispatch(loadExerciseFocus('volume'));
     }
-  }, [
-    loading,
-    exercise,
-    exerciseNames,
-    loadExercise,
-    loadExercises,
-    loadExerciseFocus
-  ]);
+  }, [dispatch, loading, exercise, exerciseNames]);
 
   const focusSelection = ['volume', 'reps'];
 
   const onChangeSelectExercise = e => {
-    loadExercise(e.target.value);
-    loadExercises({ name: e.target.value });
+    dispatch(loadExercise(e.target.value));
+    dispatch(loadExercises({ name: e.target.value }));
   };
 
   const onChangeExerciseFocus = e => {
-    loadExerciseFocus(e.target.value);
-    loadExercise(exercise);
-    loadExercises({ name: exercise });
+    dispatch(loadExerciseFocus(e.target.value));
+    dispatch(loadExercise(exercise));
+    dispatch(loadExercises({ name: exercise }));
   };
 
   return (
@@ -97,17 +87,4 @@ const ExerciseForm = ({
   );
 };
 
-ExerciseForm.propTypes = {
-  exercise: PropTypes.object,
-  loadExercise: PropTypes.func.isRequired,
-  loadExercises: PropTypes.func.isRequired,
-  loadExerciseFocus: PropTypes.func.isRequired
-};
-
-const mapStateToProps = ({ exercise }) => ({ exercise });
-
-export default connect(mapStateToProps, {
-  loadExercise,
-  loadExercises,
-  loadExerciseFocus
-})(ExerciseForm);
+export default ExerciseForm;

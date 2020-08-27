@@ -3,7 +3,7 @@ import loading from '../../img/loading.gif';
 
 const Loading = () => (
   <Fragment>
-    <img src={loading} alt="Loading..."/>
+    <img className="loading-image" src={loading} alt="Loading..."/>
   </Fragment>
 );
 

@@ -66,8 +66,8 @@ export const createExerciseChart = (rootElem, name, title) => {
     tooltip
       .html(html)
       .style('opacity', 1)
-      .style('left', `${d3.event.x - 70}px`)
-      .style('top', `${d3.event.y - 80}px`);
+      .style('left', `${d3.event.pageX - 70}px`)
+      .style('top', `${d3.event.pageY - 80}px`);
   };
 
   const tooltipHide = () => {

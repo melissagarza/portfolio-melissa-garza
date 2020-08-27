@@ -28,6 +28,9 @@ export const createExerciseChart = (rootElem, name, title) => {
   const chartSvgWrapper = d3.select(rootSelector).append('div')
     .attr('class', `ec-svg-wrapper ec-svg-wrapper-${name}`);
 
+  chartSvgWrapper.append('h3').lower()
+    .attr('class', `ec-title ec-title-${name}`);
+
   const chartSvg = chartSvgWrapper.append('svg')
     .attr('class', `ec-svg ec-svg-${name}`)
     .attr('xmlns', 'http://www.w3.org/2000/svg')
@@ -182,8 +185,7 @@ export const createExerciseChart = (rootElem, name, title) => {
       return;
     }
 
-    chartSvgWrapper.append('h3').lower()
-      .attr('class', `ec-title ec-title-${name}`)
+    chartSvgWrapper.select(`.ec-title-${name}`)
       .text(`${exercises[0].name} ${focus[0].toUpperCase() + focus.slice(1)} for ${title}`);
 
     const dataExercises = _.groupBy(exercises, exercise => exercise.date);
